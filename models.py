@@ -1,3 +1,4 @@
+from datetime import date
 from pydantic import BaseModel
 
 
@@ -7,7 +8,7 @@ class Product(BaseModel):
     name: str
     price: int | float
     quantity: int
-    expiry_date: str
+    expiry_date: date
 
 
 products = [
@@ -16,34 +17,34 @@ products = [
         name="Milk",
         price=65,
         quantity=20,
-        expiry_date="2026-09-25",
+        expiry_date=date(2026, 9, 25),
     ),
     Product(
         id=102,
         name="Bread",
         price=45,
         quantity=15,
-        expiry_date="2026-09-21",
+        expiry_date=date(2026, 9, 21),
     ),
     Product(
         id=103,
         name="Rice",
         price=850,
         quantity=10,
-        expiry_date="2027-03-15",
+        expiry_date=date(2027, 3, 15),
     ),
     Product(
         id=104,
         name="Cooking Oil",
         price=175.50,
         quantity=25,
-        expiry_date="2027-01-10",
+        expiry_date=date(2027, 1, 10),
     ),
     Product(
         id=105,
         name="Biscuits",
         price=30,
         quantity=40,
-        expiry_date="2026-12-20",
+        expiry_date=date(2026, 12, 20),
     ),
 ]
