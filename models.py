@@ -9,6 +9,7 @@ class Product(BaseModel):
     price: int | float
     quantity: int
     expiry_date: date
+    category: str
 
 
 products = [
@@ -18,6 +19,7 @@ products = [
         price=65,
         quantity=20,
         expiry_date=date(2026, 9, 25),
+        category="Dairy",
     ),
     Product(
         id=102,
@@ -25,6 +27,7 @@ products = [
         price=45,
         quantity=15,
         expiry_date=date(2026, 9, 21),
+        category="Bakery",
     ),
     Product(
         id=103,
@@ -32,6 +35,7 @@ products = [
         price=850,
         quantity=10,
         expiry_date=date(2027, 3, 15),
+        category="Grains",
     ),
     Product(
         id=104,
@@ -39,6 +43,7 @@ products = [
         price=175.50,
         quantity=25,
         expiry_date=date(2027, 1, 10),
+        category="Pantry",
     ),
     Product(
         id=105,
@@ -46,5 +51,6 @@ products = [
         price=30,
         quantity=40,
         expiry_date=date(2026, 12, 20),
+        category="Snacks",
     ),
 ]
