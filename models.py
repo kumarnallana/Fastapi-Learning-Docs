@@ -12,15 +12,37 @@ class ProductCreate(BaseModel):
     category: str
 
 
-Product = ProductCreate
-
-
 class ProductResponse(BaseModel):
     id: int
     name: str
     price: float
     quantity: int
     category: str
+
+
+# Single ProductResponse dictionary
+product_response_sample: dict = {
+    "id": 101,
+    "name": "Milk",
+    "price": 65.0,
+    "quantity": 20,
+    "category": "Dairy",
+}
+
+# List of ProductResponse dictionaries (excluding expiry_date)
+product_response_data = ProductResponse
+product_response_data: list[dict] = [
+    {"id": 101, "name": "Milk", "price": 65.0,
+        "quantity": 20, "category": "Dairy"},
+    {"id": 102, "name": "Bread", "price": 45.0,
+        "quantity": 15, "category": "Bakery"},
+    {"id": 103, "name": "Rice", "price": 850.0,
+        "quantity": 10, "category": "Grains"},
+    {"id": 104, "name": "Cooking Oil", "price": 175.5,
+        "quantity": 25, "category": "Pantry"},
+    {"id": 105, "name": "Biscuits", "price": 30.0,
+        "quantity": 40, "category": "Snacks"},
+]
 
 
 products = [

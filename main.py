@@ -1,11 +1,11 @@
-from models import ProductCreate, ProductResponse, products
+﻿from models import ProductCreate, ProductResponse, products
 from fastapi import FastAPI, HTTPException
 
 
 app = FastAPI()
 
 
-@app.get("/products/{target_id}", response_model=list[ProductResponse])
+@app.get("/products/{target_id}", response_model=ProductResponse)
 def product_by_id(target_id: int):
     for product in products:
         if product.id == target_id:
