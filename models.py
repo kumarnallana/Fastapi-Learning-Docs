@@ -2,7 +2,7 @@ from datetime import date
 from pydantic import BaseModel
 
 
-class Product(BaseModel):
+class ProductCreate(BaseModel):
 
     id: int
     name: str
@@ -12,8 +12,19 @@ class Product(BaseModel):
     category: str
 
 
+Product = ProductCreate
+
+
+class ProductResponse(BaseModel):
+    id: int
+    name: str
+    price: float
+    quantity: int
+    category: str
+
+
 products = [
-    Product(
+    ProductCreate(
         id=101,
         name="Milk",
         price=65,
@@ -21,7 +32,7 @@ products = [
         expiry_date=date(2026, 9, 25),
         category="Dairy",
     ),
-    Product(
+    ProductCreate(
         id=102,
         name="Bread",
         price=45,
@@ -29,7 +40,7 @@ products = [
         expiry_date=date(2026, 9, 21),
         category="Bakery",
     ),
-    Product(
+    ProductCreate(
         id=103,
         name="Rice",
         price=850,
@@ -37,7 +48,7 @@ products = [
         expiry_date=date(2027, 3, 15),
         category="Grains",
     ),
-    Product(
+    ProductCreate(
         id=104,
         name="Cooking Oil",
         price=175.50,
@@ -45,7 +56,7 @@ products = [
         expiry_date=date(2027, 1, 10),
         category="Pantry",
     ),
-    Product(
+    ProductCreate(
         id=105,
         name="Biscuits",
         price=30,
@@ -53,7 +64,7 @@ products = [
         expiry_date=date(2026, 12, 20),
         category="Snacks",
     ),
-    Product(
+    ProductCreate(
         id=106,
         name="Yogurt",
         price=40,
@@ -61,7 +72,7 @@ products = [
         expiry_date=date(2026, 9, 28),
         category="Dairy",
     ),
-    Product(
+    ProductCreate(
         id=107,
         name="Cheddar Cheese",
         price=210,
@@ -69,7 +80,7 @@ products = [
         expiry_date=date(2026, 11, 15),
         category="Dairy",
     ),
-    Product(
+    ProductCreate(
         id=108,
         name="Butter",
         price=58,
@@ -77,7 +88,7 @@ products = [
         expiry_date=date(2026, 10, 30),
         category="Dairy",
     ),
-    Product(
+    ProductCreate(
         id=109,
         name="Eggs (Pack of 6)",
         price=54,
@@ -85,7 +96,7 @@ products = [
         expiry_date=date(2026, 10, 5),
         category="Poultry",
     ),
-    Product(
+    ProductCreate(
         id=110,
         name="Croissant",
         price=60,
@@ -93,7 +104,7 @@ products = [
         expiry_date=date(2026, 9, 20),
         category="Bakery",
     ),
-    Product(
+    ProductCreate(
         id=111,
         name="Bagel",
         price=35,
@@ -101,7 +112,7 @@ products = [
         expiry_date=date(2026, 9, 22),
         category="Bakery",
     ),
-    Product(
+    ProductCreate(
         id=112,
         name="Whole Wheat Flour",
         price=320,
@@ -109,7 +120,7 @@ products = [
         expiry_date=date(2027, 2, 28),
         category="Grains",
     ),
-    Product(
+    ProductCreate(
         id=113,
         name="Rolled Oats",
         price=145,
@@ -117,7 +128,7 @@ products = [
         expiry_date=date(2027, 4, 10),
         category="Grains",
     ),
-    Product(
+    ProductCreate(
         id=114,
         name="Olive Oil",
         price=650,
@@ -125,7 +136,7 @@ products = [
         expiry_date=date(2027, 6, 15),
         category="Pantry",
     ),
-    Product(
+    ProductCreate(
         id=115,
         name="Table Salt",
         price=25,
@@ -133,7 +144,7 @@ products = [
         expiry_date=date(2028, 1, 1),
         category="Pantry",
     ),
-    Product(
+    ProductCreate(
         id=116,
         name="Granulated Sugar",
         price=50,
@@ -141,7 +152,7 @@ products = [
         expiry_date=date(2027, 12, 31),
         category="Pantry",
     ),
-    Product(
+    ProductCreate(
         id=117,
         name="Potato Chips",
         price=20,
@@ -149,7 +160,7 @@ products = [
         expiry_date=date(2026, 11, 25),
         category="Snacks",
     ),
-    Product(
+    ProductCreate(
         id=118,
         name="Dark Chocolate Bar",
         price=95,
@@ -157,7 +168,7 @@ products = [
         expiry_date=date(2027, 5, 20),
         category="Snacks",
     ),
-    Product(
+    ProductCreate(
         id=119,
         name="Green Tea (25 Bags)",
         price=180,
@@ -165,7 +176,7 @@ products = [
         expiry_date=date(2027, 8, 14),
         category="Beverages",
     ),
-    Product(
+    ProductCreate(
         id=120,
         name="Roasted Coffee Beans",
         price=420,
@@ -173,7 +184,7 @@ products = [
         expiry_date=date(2027, 3, 30),
         category="Beverages",
     ),
-    Product(
+    ProductCreate(
         id=121,
         name="Apple Juice (1L)",
         price=110,
@@ -181,7 +192,7 @@ products = [
         expiry_date=date(2026, 12, 10),
         category="Beverages",
     ),
-    Product(
+    ProductCreate(
         id=122,
         name="Raw Almonds",
         price=480,
@@ -189,7 +200,7 @@ products = [
         expiry_date=date(2027, 5, 5),
         category="Dry Fruits",
     ),
-    Product(
+    ProductCreate(
         id=123,
         name="Cashew Nuts",
         price=520,
@@ -197,7 +208,7 @@ products = [
         expiry_date=date(2027, 4, 25),
         category="Dry Fruits",
     ),
-    Product(
+    ProductCreate(
         id=124,
         name="Penne Pasta",
         price=95,
@@ -205,7 +216,7 @@ products = [
         expiry_date=date(2027, 7, 18),
         category="Pantry",
     ),
-    Product(
+    ProductCreate(
         id=125,
         name="Tomato Ketchup",
         price=85,
