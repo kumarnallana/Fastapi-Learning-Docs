@@ -1,4 +1,6 @@
-﻿from models import ProductCreate, ProductResponse, products
+from pydantic import HttpUrl
+from os import stat
+from models import ProductCreate, ProductResponse, ProductUpdate, products
 from fastapi import FastAPI, HTTPException
 
 
@@ -41,6 +43,24 @@ def update_product(
             products[index] = updated_product_data
             return products[index]
 
+    raise HTTPException(
+        status_code=404,
+        detail=f"{target_id}: Product not found",
+    )
+
+
+@app.patch("/products/{target_id}")
+def partial_update_product(target_id: int, update_product: ProductUpdate):
+
+    for index, product in enumerate(products):
+
+        if product.id == target_id:
+            updated_data = update_product.model_dump(exclude_unset=True)
+            current_data = product.model_dump()
+            current_data.update(updated_data)
+            updated_product = ProductResponse(**current_data)
+            products[index] = updated_product
+            return updated_product
     raise HTTPException(
         status_code=404,
         detail=f"{target_id}: Product not found",

@@ -20,28 +20,34 @@ class ProductResponse(BaseModel):
     category: str
 
 
-# Single ProductResponse dictionary
-product_response_sample: dict = {
-    "id": 101,
-    "name": "Milk",
-    "price": 65.0,
-    "quantity": 20,
-    "category": "Dairy",
-}
+class ProductUpdate(BaseModel):
+    name: str | None = None
+    price: float | None = None
+    quantity: int | None = None
+    category: str | None = None
+    expiry_date: date | None = None
+
 
 # List of ProductResponse dictionaries (excluding expiry_date)
 product_response_data = ProductResponse
-product_response_data: list[dict] = [
-    {"id": 101, "name": "Milk", "price": 65.0,
-        "quantity": 20, "category": "Dairy"},
-    {"id": 102, "name": "Bread", "price": 45.0,
-        "quantity": 15, "category": "Bakery"},
-    {"id": 103, "name": "Rice", "price": 850.0,
-        "quantity": 10, "category": "Grains"},
-    {"id": 104, "name": "Cooking Oil", "price": 175.5,
-        "quantity": 25, "category": "Pantry"},
-    {"id": 105, "name": "Biscuits", "price": 30.0,
-        "quantity": 40, "category": "Snacks"},
+
+products: list[ProductResponse] = [
+    ProductResponse(
+        id=101,
+        name="Milk",
+        price=65,
+        quantity=20,
+        category="grocery",
+        expiry_date="2026-09-25",
+    ),
+    ProductResponse(
+        id=102,
+        name="Bread",
+        price=45,
+        quantity=15,
+        category="grocery",
+        expiry_date="2026-09-21",
+    ),
 ]
 
 
