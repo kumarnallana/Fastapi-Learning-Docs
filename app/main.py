@@ -1,6 +1,6 @@
-from pydantic import HttpUrl
+﻿from pydantic import HttpUrl
 from os import stat
-from models import ProductCreate, ProductResponse, ProductUpdate, products
+from app.models import ProductCreate, ProductResponse, ProductUpdate, products
 from fastapi import FastAPI, HTTPException
 
 
