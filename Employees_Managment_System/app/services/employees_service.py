@@ -203,3 +203,19 @@ def get_employee_by_id(target_id: int) -> EmployeeCreate:
             "message": f"User Not found with id:{target_id}"
         }
     )
+
+
+def create_new_employee(employee: EmployeeCreate) -> EmployeeCreate:
+    for existing_emp in employees_create:
+        if existing_emp.id == employee.id:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail={
+                    "field": f"id: {employee.id}",
+                    "message": f"Employee with id {employee.id} already exists"
+                }
+            )
+    employees_create.append(employee)
+
+    return employee
+
