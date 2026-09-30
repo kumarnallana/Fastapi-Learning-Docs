@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from routers.employees import router as employee
+from .routers.products import router as product_router
 
 app = FastAPI(
-    title="Welcome to Fast api learning docs!"
+    title="FastAPI Learning Project"
 )
 
 
@@ -14,4 +14,4 @@ def root():
     }
 
 
-app.include_router(employee_router)
+app.include_router(product_router)

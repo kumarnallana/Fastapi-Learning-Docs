@@ -1,57 +1,8 @@
 from datetime import date
-from pydantic import BaseModel
+from ..schemas.models import ProductCreate, ProductUpdate
+from fastapi import HTTPException
 
-
-class ProductCreate(BaseModel):
-
-    id: int
-    name: str
-    price: int | float
-    quantity: int
-    expiry_date: date
-    category: str
-
-
-class ProductResponse(BaseModel):
-    id: int
-    name: str
-    price: float
-    quantity: int
-    category: str
-
-
-class ProductUpdate(BaseModel):
-    name: str | None = None
-    price: float | None = None
-    quantity: int | None = None
-    category: str | None = None
-    expiry_date: date | None = None
-
-
-# List of ProductResponse dictionaries (excluding expiry_date)
-product_response_data = ProductResponse
-
-products: list[ProductResponse] = [
-    ProductResponse(
-        id=101,
-        name="Milk",
-        price=65,
-        quantity=20,
-        category="grocery",
-        expiry_date="2026-09-25",
-    ),
-    ProductResponse(
-        id=102,
-        name="Bread",
-        price=45,
-        quantity=15,
-        category="grocery",
-        expiry_date="2026-09-21",
-    ),
-]
-
-
-products = [
+products: list[ProductCreate] = [
     ProductCreate(
         id=101,
         name="Milk",
@@ -253,3 +204,109 @@ products = [
         category="Condiments",
     ),
 ]
+products_create = products
+
+
+def product_by_id(target_id: int):
+    for product in products:
+        if product.id == target_id:
+            return product
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"{target_id}: Product not found",
+    )
+
+
+def add_product_in_db(product: ProductCreate):
+    for existing_product in products:
+        if existing_product.id == product.id:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Product with id {product.id} already exists",
+            )
+
+    products.append(product)
+
+    return product
+
+
+def update_product_by_id(
+    target_id: int,
+    updated_product_data: ProductCreate,
+):
+    for index, product in enumerate(products):
+        if product.id == target_id:
+            updated_product_data.id = target_id
+            products[index] = updated_product_data
+            return products[index]
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"{target_id}: Product not found",
+    )
+
+
+def partial_updated_product(target_id: int, update_product: ProductUpdate):
+
+    for index, product in enumerate(products):
+
+        if product.id == target_id:
+            updated_data = update_product.model_dump(exclude_unset=True)
+            current_data = product.model_dump()
+            current_data.update(updated_data)
+            updated_product = ProductCreate(**current_data)
+            products[index] = updated_product
+            return updated_product
+    raise HTTPException(
+        status_code=404,
+        detail=f"{target_id}: Product not found",
+    )
+
+
+def delete_product_by_id(target_id: int):
+    for index, product in enumerate(products):
+        if product.id == target_id:
+            deleted_product = products.pop(index)
+            return deleted_product
+
+    raise HTTPException(
+        status_code=404,
+        detail=f"{target_id}: Product not found",
+    )
+
+
+def get_product_by_condition(
+    category: str | None = None,
+    min_price: float | None = None,
+    max_price: float | None = None,
+):
+    filtered_products: list[ProductCreate] = []
+
+    for product in products:
+        category_match = (
+            product.category.lower() == category.strip().lower()
+            if category is not None
+            else True
+        )
+
+        min_price_match = (
+            product.price >= min_price
+            if min_price is not None
+            else True
+        )
+
+        max_price_match = (
+            product.price <= max_price
+            if max_price is not None
+            else True
+        )
+
+        if (
+            category_match
+            and min_price_match
+            and max_price_match
+        ):
+            filtered_products.append(product)
+
+    return filtered_products

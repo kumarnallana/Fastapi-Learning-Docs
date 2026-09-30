@@ -1,0 +1,13 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "typeCheckingMode": "off",
+  "reportMissingImports": "none",
+  "reportMissingModuleSource": "none",
+  "extraPaths": [
+    "Employees_Managment_System/app",
+    "Product_managment_System/app",
+    "Employees_Managment_System",
+    "Product_managment_System"
+  ]
+}

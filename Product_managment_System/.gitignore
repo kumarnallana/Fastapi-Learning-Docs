@@ -31,7 +31,6 @@ MANIFEST
 venv/
 ENV/
 env/
-*env/
 
 # Environment Variables
 .env
