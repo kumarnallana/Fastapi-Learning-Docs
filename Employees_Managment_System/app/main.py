@@ -1,5 +1,6 @@
+# pyrefly: ignore [missing-import]
 from fastapi import FastAPI
-from routers.employees import router as employee
+from routers.employees import router as employee_router
 
 app = FastAPI(
     title="Welcome to Fast api learning docs!"
