@@ -7,6 +7,7 @@ from services.employees_service import (
     delete_employee_by_id,
     get_all_employees_data,
     get_employee_by_id,
+    get_employees_by_condition,
     partial_update_employee,
     update_employee_completeData
 )
@@ -17,9 +18,20 @@ router = APIRouter(
 )
 
 
-@router.get("")
-def get_employees():
-    return get_all_employees_data()
+@router.get("", response_model=list[EmployeeResponse])
+def get_employees(
+    department: str | None = None,
+    role: str | None = None,
+    min_experience: int | None = None,
+    max_experience: int | None = None,
+):
+    return get_employees_by_condition(
+        department=department,
+        role=role,
+        min_experience=min_experience,
+        max_experience=max_experience,
+    )
+
 
 
 @router.get("/{target_id}", response_model=EmployeeResponse)

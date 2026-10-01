@@ -269,3 +269,48 @@ def delete_employee_by_id(target_id: int) -> EmployeeCreate:
     )
 
 
+def get_employees_by_condition(
+    department: str | None = None,
+    role: str | None = None,
+    min_experience: int | None = None,
+    max_experience: int | None = None,
+) -> list[EmployeeCreate]:
+    filtered_employees: list[EmployeeCreate] = []
+
+    for employee in employees_create:
+        department_match = (
+            employee.department.strip().lower() == department.strip().lower()
+            if department is not None
+            else True
+        )
+
+        role_match = (
+            role.strip().lower() in employee.role.strip().lower()
+            if role is not None
+            else True
+        )
+
+        min_exp_match = (
+            employee.experience >= min_experience
+            if min_experience is not None
+            else True
+        )
+
+        max_exp_match = (
+            employee.experience <= max_experience
+            if max_experience is not None
+            else True
+        )
+
+        if (
+            department_match
+            and role_match
+            and min_exp_match
+            and max_exp_match
+        ):
+            filtered_employees.append(employee)
+
+    return filtered_employees
+
+
+
