@@ -1,11 +1,12 @@
 from fastapi import APIRouter
 # pyrefly: ignore [missing-import]
-from schemas.employee import EmployeeCreate, EmployeeResponse
+from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate
 # pyrefly: ignore [missing-import]
 from services.employees_service import (
     create_new_employee,
     get_all_employees_data,
     get_employee_by_id,
+    partial_update_employee,
     update_employee_completeData
 )
 
@@ -33,4 +34,10 @@ def create_employee(employee: EmployeeCreate):
 @router.put("/{target_id}", response_model=EmployeeResponse)
 def update_employee(target_id: int, updated_emp_data: EmployeeCreate):
     return update_employee_completeData(target_id, updated_emp_data)
+
+
+@router.patch("/{target_id}", response_model=EmployeeResponse)
+def partial_update_employee_data(target_id: int, updated_emp_data: EmployeeUpdate):
+    return partial_update_employee(target_id, updated_emp_data)
+
 

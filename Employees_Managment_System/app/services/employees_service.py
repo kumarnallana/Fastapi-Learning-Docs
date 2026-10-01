@@ -1,5 +1,5 @@
 # pyrefly: ignore [missing-import]
-from schemas.employee import EmployeeCreate, EmployeeResponse
+from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate
 from fastapi import HTTPException, status
 
 
@@ -234,3 +234,23 @@ def update_employee_completeData(target_id: int, updated_data: EmployeeCreate) -
             "message": f"User Not found with id:{target_id}"
         }
     )
+
+
+def partial_update_employee(target_id: int, updated_data: EmployeeUpdate) -> EmployeeCreate:
+    for index, employee in enumerate(employees_create):
+        if employee.id == target_id:
+            patch_data = updated_data.model_dump(exclude_unset=True)
+            current_data = employee.model_dump()
+            current_data.update(patch_data)
+            updated_employee = EmployeeCreate(**current_data)
+            employees_create[index] = updated_employee
+            return updated_employee
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail={
+            "field": f"id:{target_id}",
+            "message": f"User Not found with id:{target_id}"
+        }
+    )
+
