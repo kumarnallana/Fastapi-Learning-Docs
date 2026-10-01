@@ -254,3 +254,18 @@ def partial_update_employee(target_id: int, updated_data: EmployeeUpdate) -> Emp
         }
     )
 
+
+def delete_employee_by_id(target_id: int) -> EmployeeCreate:
+    for index, employee in enumerate(employees_create):
+        if employee.id == target_id:
+            return employees_create.pop(index)
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail={
+            "field": f"id:{target_id}",
+            "message": f"User Not found with id:{target_id}"
+        }
+    )
+
+

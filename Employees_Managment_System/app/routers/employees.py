@@ -4,6 +4,7 @@ from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate
 # pyrefly: ignore [missing-import]
 from services.employees_service import (
     create_new_employee,
+    delete_employee_by_id,
     get_all_employees_data,
     get_employee_by_id,
     partial_update_employee,
@@ -39,5 +40,11 @@ def update_employee(target_id: int, updated_emp_data: EmployeeCreate):
 @router.patch("/{target_id}", response_model=EmployeeResponse)
 def partial_update_employee_data(target_id: int, updated_emp_data: EmployeeUpdate):
     return partial_update_employee(target_id, updated_emp_data)
+
+
+@router.delete("/{target_id}", response_model=EmployeeResponse)
+def delete_employee(target_id: int):
+    return delete_employee_by_id(target_id)
+
 
 
