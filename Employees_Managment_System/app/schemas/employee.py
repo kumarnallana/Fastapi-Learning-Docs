@@ -1,24 +1,27 @@
-from pydantic import BaseModel
+from datetime import date
+from pydantic import BaseModel, Field, ConfigDict
+from typing import Annotated
 
 
-class EmployeeCreate(BaseModel):
-    id: int
-    name: str
-    role: str
-    experience: int
-    salary: int | float
-    department: str
-    joinning_date: int
+class EmployeeBase(BaseModel):
+    id: Annotated[int, Field(gt=3)]
+    name: Annotated[str, Field(min_length=1, max_length=50)]
+    role: Annotated[str, Field(min_length=1, max_length=30)]
+    experience: Annotated[int, Field(gt=2)]
+    salary: Annotated[int, Field(gt=200000)]
+    department: Annotated[str, Field(min_length=1, max_length=30)]
+    joining_date: Annotated[
+        date,
+        Field(gt=date(2000, 1, 1))
+    ]
 
 
-class EmployeeUpdate(BaseModel):
-    id: int
-    name: str
-    role: str
-    experience: int
-    salary: int | float
-    department: str
-    joinning_date: int
+class EmployeeCreate(EmployeeBase):
+    pass
+
+
+class EmployeeUpdate(EmployeeBase):
+    pass
 
 
 class EmployeePartialUpdate(BaseModel):
@@ -27,10 +30,12 @@ class EmployeePartialUpdate(BaseModel):
     experience: int | None = None
     salary: int | float | None = None
     department: str | None = None
-    joinning_date: int | None = None
+    joining_date: int | None = None
 
 
 class EmployeeResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     name: str
     role: str
