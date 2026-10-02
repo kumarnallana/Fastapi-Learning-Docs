@@ -1,15 +1,13 @@
 from fastapi import APIRouter
 # pyrefly: ignore [missing-import]
-from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate
+from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeePartialUpdate
 # pyrefly: ignore [missing-import]
 from services.employees_service import (
     create_new_employee,
-    delete_employee_by_id,
     get_all_employees_data,
     get_employee_by_id,
-    get_employees_by_condition,
-    partial_update_employee,
-    update_employee_completeData
+    update_employee_completeData,
+    partially_update_empdata
 )
 
 router = APIRouter(
@@ -18,20 +16,9 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[EmployeeResponse])
-def get_employees(
-    department: str | None = None,
-    role: str | None = None,
-    min_experience: int | None = None,
-    max_experience: int | None = None,
-):
-    return get_employees_by_condition(
-        department=department,
-        role=role,
-        min_experience=min_experience,
-        max_experience=max_experience,
-    )
-
+@router.get("")
+def get_employees():
+    return get_all_employees_data()
 
 
 @router.get("/{target_id}", response_model=EmployeeResponse)
@@ -50,13 +37,5 @@ def update_employee(target_id: int, updated_emp_data: EmployeeCreate):
 
 
 @router.patch("/{target_id}", response_model=EmployeeResponse)
-def partial_update_employee_data(target_id: int, updated_emp_data: EmployeeUpdate):
-    return partial_update_employee(target_id, updated_emp_data)
-
-
-@router.delete("/{target_id}", response_model=EmployeeResponse)
-def delete_employee(target_id: int):
-    return delete_employee_by_id(target_id)
-
-
-
+def partial_update(target_id: int, partial_data: EmployeePartialUpdate):
+    return partially_update_empdata(target_id, partial_data)

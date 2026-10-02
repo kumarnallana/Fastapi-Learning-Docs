@@ -1,5 +1,4 @@
-# pyrefly: ignore [missing-import]
-from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate
+from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate, EmployeePartialUpdate
 from fastapi import HTTPException, status
 
 
@@ -220,7 +219,7 @@ def create_new_employee(employee: EmployeeCreate) -> EmployeeCreate:
     return employee
 
 
-def update_employee_completeData(target_id: int, updated_data: EmployeeCreate) -> EmployeeCreate:
+def update_employee_completeData(target_id: int, updated_data: EmployeeUpdate) -> EmployeeCreate:
     for index, employee in enumerate(employees_create):
         if employee.id == target_id:
             updated_data.id = target_id
@@ -236,15 +235,16 @@ def update_employee_completeData(target_id: int, updated_data: EmployeeCreate) -
     )
 
 
-def partial_update_employee(target_id: int, updated_data: EmployeeUpdate) -> EmployeeCreate:
+def partially_update_empdata(target_id: int, update_data: EmployeePartialUpdate) -> EmployeeCreate:
     for index, employee in enumerate(employees_create):
         if employee.id == target_id:
-            patch_data = updated_data.model_dump(exclude_unset=True)
+            update_data = update_data.model_dump(exclude_unset=True)
             current_data = employee.model_dump()
-            current_data.update(patch_data)
-            updated_employee = EmployeeCreate(**current_data)
-            employees_create[index] = updated_employee
-            return updated_employee
+            current_data.update(update_data)
+            current_data["id"] = target_id
+            partial_update = EmployeeCreate(**current_data)
+            employees_create[index] = partial_update
+            return partial_update
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
@@ -253,64 +253,3 @@ def partial_update_employee(target_id: int, updated_data: EmployeeUpdate) -> Emp
             "message": f"User Not found with id:{target_id}"
         }
     )
-
-
-def delete_employee_by_id(target_id: int) -> EmployeeCreate:
-    for index, employee in enumerate(employees_create):
-        if employee.id == target_id:
-            return employees_create.pop(index)
-
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail={
-            "field": f"id:{target_id}",
-            "message": f"User Not found with id:{target_id}"
-        }
-    )
-
-
-def get_employees_by_condition(
-    department: str | None = None,
-    role: str | None = None,
-    min_experience: int | None = None,
-    max_experience: int | None = None,
-) -> list[EmployeeCreate]:
-    filtered_employees: list[EmployeeCreate] = []
-
-    for employee in employees_create:
-        department_match = (
-            employee.department.strip().lower() == department.strip().lower()
-            if department is not None
-            else True
-        )
-
-        role_match = (
-            role.strip().lower() in employee.role.strip().lower()
-            if role is not None
-            else True
-        )
-
-        min_exp_match = (
-            employee.experience >= min_experience
-            if min_experience is not None
-            else True
-        )
-
-        max_exp_match = (
-            employee.experience <= max_experience
-            if max_experience is not None
-            else True
-        )
-
-        if (
-            department_match
-            and role_match
-            and min_exp_match
-            and max_exp_match
-        ):
-            filtered_employees.append(employee)
-
-    return filtered_employees
-
-
-
