@@ -22,7 +22,6 @@ class EmployeeUpdate(BaseModel):
 
 
 class EmployeePartialUpdate(BaseModel):
-    id: int | None = None
     name: str | None = None
     role: str | None = None
     experience: int | None = None

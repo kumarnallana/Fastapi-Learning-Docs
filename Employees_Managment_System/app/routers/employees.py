@@ -7,12 +7,13 @@ from services.employees_service import (
     get_all_employees_data,
     get_employee_by_id,
     update_employee_completeData,
-    partially_update_empdata
+    partially_update_empdata,
+    delete_employee_by_id
 )
 
 router = APIRouter(
-    prefix="/users",
-    tags=["users"]
+    prefix="/employees",
+    tags=["employees"]
 )
 
 
@@ -39,3 +40,8 @@ def update_employee(target_id: int, updated_emp_data: EmployeeCreate):
 @router.patch("/{target_id}", response_model=EmployeeResponse)
 def partial_update(target_id: int, partial_data: EmployeePartialUpdate):
     return partially_update_empdata(target_id, partial_data)
+
+
+@router.delete("/{target_id}", response_model=EmployeeResponse)
+def delete_employee(target_id: int):
+    return delete_employee_by_id(target_id)

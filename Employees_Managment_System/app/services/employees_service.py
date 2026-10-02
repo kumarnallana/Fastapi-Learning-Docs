@@ -199,7 +199,7 @@ def get_employee_by_id(target_id: int) -> EmployeeResponse:
         status_code=status.HTTP_404_NOT_FOUND,
         detail={
             "field": f"id:{target_id}",
-            "message": f"User Not found with id:{target_id}"
+            "message": f"Employee Not found with id:{target_id}"
         }
     )
 
@@ -230,7 +230,7 @@ def update_employee_completeData(target_id: int, updated_data: EmployeeUpdate) -
         status_code=status.HTTP_404_NOT_FOUND,
         detail={
             "field": f"id:{target_id}",
-            "message": f"User Not found with id:{target_id}"
+            "message": f"Employee Not found with id:{target_id}"
         }
     )
 
@@ -250,6 +250,21 @@ def partially_update_empdata(target_id: int, update_data: EmployeePartialUpdate)
         status_code=status.HTTP_404_NOT_FOUND,
         detail={
             "field": f"id:{target_id}",
-            "message": f"User Not found with id:{target_id}"
+            "message": f"Employee Not found with id:{target_id}"
+        }
+    )
+
+
+def delete_employee_by_id(target_id: int):
+    for index, employee in enumerate(employees_create):
+        if employee.id == target_id:
+            employees_create.pop(index)
+            return employee
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail={
+            "field": f"id:{target_id}",
+            "message": f"Employee Not found with id:{target_id}"
         }
     )
