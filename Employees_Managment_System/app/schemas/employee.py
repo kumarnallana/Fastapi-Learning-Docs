@@ -49,12 +49,7 @@ class EmployeeBase(BaseModel):
         Field(gt=3)
     ]
 
-    first_name: Annotated[
-        str,
-        Field(min_length=1, max_length=50)
-    ]
-
-    last_name: Annotated[
+    name: Annotated[
         str,
         Field(min_length=1, max_length=50)
     ]
@@ -86,28 +81,28 @@ class EmployeeBase(BaseModel):
 
     # Model Validator for Full Name
 
-    @model_validator(mode="before")
-    @classmethod
-    def fullname_validator(cls, data: Any) -> Any:
-        if not isinstance(data, dict):
-            return data
+    # @model_validator(mode="before")
+    # @classmethod
+    # def fullname_validator(cls, data: Any) -> Any:
+    #     if not isinstance(data, dict):
+    #         return data
 
-        full_name = data.get("full_name")
+    #     full_name = data.get("full_name")
 
-        if not full_name:
-            raise ValueError("full_name is required")
+    #     if not full_name:
+    #         raise ValueError("full_name is required")
 
-        parts = full_name.strip().split(maxsplit=1)
+    #     parts = full_name.strip().split(maxsplit=1)
 
-        if len(parts) != 2:
-            raise ValueError("Full name must contain first name and last name")
+    #     if len(parts) != 2:
+    #         raise ValueError("Full name must contain first name and last name")
 
-        data["first_name"] = parts[0]
-        data["last_name"] = parts[1]
+    #     data["first_name"] = parts[0]
+    #     data["last_name"] = parts[1]
 
-        del data["full_name"]
+    #     del data["full_name"]
 
-        return data
+    #     return data
 
     # Custom validators
 
