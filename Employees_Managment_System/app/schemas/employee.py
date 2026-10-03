@@ -1,6 +1,7 @@
+
 from datetime import date
-from typing import Annotated
-from pydantic import BaseModel, Field, ConfigDict, field_validator
+from typing import Annotated, Any
+from pydantic import BaseModel, Field, ConfigDict, field_validator, model_validator
 
 
 class CustomValidator:
@@ -36,7 +37,7 @@ class CustomValidator:
             raise ValueError("Salary should be an integer")
 
         if value <= 200000:
-            raise ValueError("Salary must be greater than 200000")
+            raise ValueError("Salary must be greater than 2,00,000")
 
         return value
 
@@ -48,7 +49,12 @@ class EmployeeBase(BaseModel):
         Field(gt=3)
     ]
 
-    name: Annotated[
+    first_name: Annotated[
+        str,
+        Field(min_length=1, max_length=50)
+    ]
+
+    last_name: Annotated[
         str,
         Field(min_length=1, max_length=50)
     ]
@@ -78,7 +84,33 @@ class EmployeeBase(BaseModel):
         Field(gt=date(2000, 1, 1))
     ]
 
+    # Model Validator for Full Name
+
+    @model_validator(mode="before")
+    @classmethod
+    def fullname_validator(cls, data: Any) -> Any:
+        if not isinstance(data, dict):
+            return data
+
+        full_name = data.get("full_name")
+
+        if not full_name:
+            raise ValueError("full_name is required")
+
+        parts = full_name.strip().split(maxsplit=1)
+
+        if len(parts) != 2:
+            raise ValueError("Full name must contain first name and last name")
+
+        data["first_name"] = parts[0]
+        data["last_name"] = parts[1]
+
+        del data["full_name"]
+
+        return data
+
     # Custom validators
+
     @field_validator("id")
     @classmethod
     def validate_id(cls, value: int) -> int:
