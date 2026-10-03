@@ -4,9 +4,6 @@ from typing import Annotated, Any
 from pydantic import BaseModel, Field, ConfigDict, field_validator, model_validator
 
 
-
-
-
 class EmployeeBase(BaseModel):
 
     id: Annotated[
