@@ -4,42 +4,7 @@ from typing import Annotated, Any
 from pydantic import BaseModel, Field, ConfigDict, field_validator, model_validator
 
 
-class CustomValidator:
 
-    @staticmethod
-    def id_validator(value: int) -> int:
-        if value is None:
-            raise ValueError("ID shouldn't be None")
-
-        if not isinstance(value, int):
-            raise ValueError("ID should be an integer")
-
-        return value
-
-    @staticmethod
-    def name_validator(value: str) -> str:
-        if not isinstance(value, str):
-            raise ValueError("Name must be a string")
-
-        value = value.strip()
-
-        if not value:
-            raise ValueError("Name shouldn't be empty")
-
-        return value
-
-    @staticmethod
-    def salary_validator(value: int) -> int:
-        if value is None:
-            raise ValueError("Salary shouldn't be None")
-
-        if not isinstance(value, int):
-            raise ValueError("Salary should be an integer")
-
-        if value <= 200000:
-            raise ValueError("Salary must be greater than 2,00,000")
-
-        return value
 
 
 class EmployeeBase(BaseModel):
@@ -79,47 +44,47 @@ class EmployeeBase(BaseModel):
         Field(gt=date(2000, 1, 1))
     ]
 
-    # Model Validator for Full Name
-
-    # @model_validator(mode="before")
-    # @classmethod
-    # def fullname_validator(cls, data: Any) -> Any:
-    #     if not isinstance(data, dict):
-    #         return data
-
-    #     full_name = data.get("full_name")
-
-    #     if not full_name:
-    #         raise ValueError("full_name is required")
-
-    #     parts = full_name.strip().split(maxsplit=1)
-
-    #     if len(parts) != 2:
-    #         raise ValueError("Full name must contain first name and last name")
-
-    #     data["first_name"] = parts[0]
-    #     data["last_name"] = parts[1]
-
-    #     del data["full_name"]
-
-    #     return data
-
-    # Custom validators
-
-    @field_validator("id")
+    # -------------------------------------------------------------------------
+    # 1. BEFORE VALIDATOR (Input Sanitization)
+    # Why needed: Runs BEFORE Pydantic checks constraints like min_length.
+    # Without this, a string of spaces "   " would pass min_length=1!
+    # -------------------------------------------------------------------------
+    @field_validator("name", "role", "department", mode="before")
     @classmethod
-    def validate_id(cls, value: int) -> int:
-        return CustomValidator.id_validator(value)
+    def sanitize_strings(cls, value: Any) -> Any:
+        if isinstance(value, str):
+            value = value.strip()
+            if not value:
+                raise ValueError("Value cannot be blank or whitespace only")
+        return value
 
-    @field_validator("name")
+    # -------------------------------------------------------------------------
+    # 2. AFTER VALIDATOR (Dynamic Business Validation)
+    # Why needed: Pydantic's Field(gt=...) can only compare static values.
+    # It CANNOT compare dynamically against date.today() at runtime.
+    # -------------------------------------------------------------------------
+    @field_validator("joining_date", mode="after")
     @classmethod
-    def validate_name(cls, value: str) -> str:
-        return CustomValidator.name_validator(value)
+    def validate_joining_date_not_future(cls, value: date) -> date:
+        if value > date.today():
+            raise ValueError("Joining date cannot be in the future")
+        return value
 
-    @field_validator("salary")
-    @classmethod
-    def validate_salary(cls, value: int) -> int:
-        return CustomValidator.salary_validator(value)
+    # -------------------------------------------------------------------------
+    # 3. MODEL VALIDATOR (Cross-Field Validation)
+    # Why needed: A field_validator only sees ONE field at a time.
+    # A model_validator is required when one field depends on another
+    # (here, verifying that Senior/Lead/Manager roles have sufficient experience).
+    # -------------------------------------------------------------------------
+    @model_validator(mode="after")
+    def validate_senior_role_experience(self) -> "EmployeeBase":
+        senior_keywords = ["senior", "lead", "manager"]
+        if any(keyword in self.role.lower() for keyword in senior_keywords):
+            if self.experience < 5:
+                raise ValueError(
+                    f"Roles containing 'Senior', 'Lead', or 'Manager' require at least 5 years of experience (provided: {self.experience} years for '{self.role}')."
+                )
+        return self
 
 
 class EmployeeCreate(EmployeeBase):
@@ -139,23 +104,30 @@ class EmployeePartialUpdate(BaseModel):
     department: str | None = None
     joining_date: date | None = None
 
-    @field_validator("name")
+    # Before validator: strip string fields if provided
+    @field_validator("name", "role", "department", mode="before")
     @classmethod
-    def validate_name(cls, value: str | None) -> str | None:
-        if value is None:
-            return value
+    def sanitize_partial_strings(cls, value: Any) -> Any:
+        if isinstance(value, str):
+            value = value.strip()
+            if not value:
+                raise ValueError("Value cannot be blank or whitespace only")
+        return value
 
-        return CustomValidator.name_validator(value)
-
-    @field_validator("salary")
+    # After validator: dynamic date check if provided
+    @field_validator("joining_date", mode="after")
     @classmethod
-    def validate_salary(cls, value: int | float | None) -> int | float | None:
-        if value is None:
-            return value
+    def validate_partial_joining_date(cls, value: date | None) -> date | None:
+        if value is not None and value > date.today():
+            raise ValueError("Joining date cannot be in the future")
+        return value
 
-        if value <= 200000:
-            raise ValueError("Salary must be greater than 200000")
-
+    # After validator: salary check if provided
+    @field_validator("salary", mode="after")
+    @classmethod
+    def validate_partial_salary(cls, value: int | float | None) -> int | float | None:
+        if value is not None and value <= 200000:
+            raise ValueError("Salary must be greater than 200,000")
         return value
 
 
