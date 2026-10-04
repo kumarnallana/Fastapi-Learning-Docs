@@ -1,5 +1,6 @@
-from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate, EmployeePartialUpdate
-from fastapi import HTTPException, status
+from typing import Annotated
+from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate, EmployeePartialUpdate, EmployeeFilter
+from fastapi import HTTPException, status, Depends
 from datetime import date
 
 
@@ -269,3 +270,8 @@ def delete_employee_by_id(target_id: int):
             "message": f"Employee Not found with id:{target_id}"
         }
     )
+
+
+def get_emp_by_filter(filters: Annotated[EmployeeFilter, Depends()]):
+    limit, skip = filters.limit, filters.skip
+    return limit, skip

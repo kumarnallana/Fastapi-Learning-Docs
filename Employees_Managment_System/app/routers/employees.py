@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from typing import Annotated
 # pyrefly: ignore [missing-import]
-from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeePartialUpdate
+from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeePartialUpdate, EmployeeFilter
 # pyrefly: ignore [missing-import]
 from services.employees_service import (
     create_new_employee,
@@ -8,7 +9,8 @@ from services.employees_service import (
     get_employee_by_id,
     update_employee_completeData,
     partially_update_empdata,
-    delete_employee_by_id
+    delete_employee_by_id,
+    get_emp_by_filter
 )
 
 router = APIRouter(
@@ -17,9 +19,9 @@ router = APIRouter(
 )
 
 
-@router.get("")
-def get_employees():
-    return get_all_employees_data()
+@router.get("", response_model=list[EmployeeResponse])
+def get_employees(filters: Annotated[EmployeeFilter, Depends()]):
+    return get_emp_by_filter(filters.skip, filters.limit)
 
 
 @router.get("/{target_id}", response_model=EmployeeResponse)
@@ -45,3 +47,10 @@ def partial_update(target_id: int, partial_data: EmployeePartialUpdate):
 @router.delete("/{target_id}", response_model=EmployeeResponse)
 def delete_employee(target_id: int):
     return delete_employee_by_id(target_id)
+
+
+@router.get("")
+def get_employee_through_filter(
+    filters: Annotated[EmployeeFilter, Depends()]
+):
+    return get_emp_by_filter(filters.skip, filters.limit)

@@ -1,3 +1,5 @@
+from fastapi import Query
+from typing import Annotated
 from datetime import date
 from pydantic import BaseModel, ConfigDict
 
@@ -27,6 +29,16 @@ class EmployeePartialUpdate(BaseModel):
     salary: int | float | None = None
     department: str | None = None
     joining_date: date | None = None
+
+
+class EmployeeFilter(BaseModel):
+    skip: int | None = None
+    limit: Annotated[
+        int | None,
+        Query(
+            default=10, gt=0, le=100, description="Fetching Number of results based on Query"
+        )
+    ] = 10
 
 
 class EmployeeResponse(BaseModel):
