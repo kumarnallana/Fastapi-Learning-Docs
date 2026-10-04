@@ -31,25 +31,6 @@ class EmployeePartialUpdate(BaseModel):
     joining_date: date | None = None
 
 
-class EmployeeFilter(BaseModel):
-    skip: int | None = None
-    limit: Annotated[
-        int | None,
-        Query(
-            default=10, gt=0, le=100, description="Fetching Number of results based on Query"
-        )
-    ] = 10
-    department: Annotated[
-        str | None,
-        Query(min_length=3, max_length=20,
-              description="Fetching based on the department")
-    ] = "Engineering"
-    salary: Annotated[
-        int | None,
-        Query(default=None, ge=200000, description="Filter Employee by Salary")
-    ] = None
-
-
 class EmployeeResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

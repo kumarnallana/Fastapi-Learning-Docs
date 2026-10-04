@@ -270,18 +270,3 @@ def delete_employee_by_id(target_id: int):
             "message": f"Employee Not found with id:{target_id}"
         }
     )
-
-
-def get_emp_by_filter(skip: int = 0, limit: int = 10, department: str = "Engineering", salary: int = 200000):
-
-    if department is not None or skip is not None or limit is not None:
-
-        filtered_dept: list[dict[str, int | str]] = []
-        employee_slicing: list[dict[str, int | str]] = []
-        for employee in employees_create:
-            if employee.department.lower() == department.lower() and employee.salary > salary:
-                filtered_dept.append(employee)
-        start = skip or 0
-        end = start + (limit or 0)
-        employee_slicing = filtered_dept[start: end]
-        return employee_slicing
