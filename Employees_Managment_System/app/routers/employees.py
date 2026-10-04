@@ -47,10 +47,3 @@ def partial_update(target_id: int, partial_data: EmployeePartialUpdate):
 @router.delete("/{target_id}", response_model=EmployeeResponse)
 def delete_employee(target_id: int):
     return delete_employee_by_id(target_id)
-
-
-@router.get("")
-def get_employee_through_filter(
-    filters: Annotated[EmployeeFilter, Depends()]
-):
-    return get_emp_by_filter(filters.skip, filters.limit)
