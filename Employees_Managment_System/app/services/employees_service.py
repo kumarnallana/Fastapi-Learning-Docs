@@ -272,6 +272,7 @@ def delete_employee_by_id(target_id: int):
     )
 
 
-def get_emp_by_filter(filters: Annotated[EmployeeFilter, Depends()]):
-    limit, skip = filters.limit, filters.skip
-    return limit, skip
+def get_emp_by_filter(skip: int = 0, limit: int = 10):
+
+    if skip is None:
+        return employees_create[skip: skip + limit]
