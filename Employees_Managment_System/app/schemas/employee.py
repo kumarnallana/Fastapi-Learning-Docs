@@ -39,6 +39,11 @@ class EmployeeFilter(BaseModel):
             default=10, gt=0, le=100, description="Fetching Number of results based on Query"
         )
     ] = 10
+    department: Annotated[
+        str | None,
+        Query(min_length=3, max_length=20,
+              description="Fetching based on the department")
+    ] = "Engineering"
 
 
 class EmployeeResponse(BaseModel):
