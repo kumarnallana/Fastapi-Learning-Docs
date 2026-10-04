@@ -21,7 +21,7 @@ def get_product(target_id: int):
     return product_by_id(target_id)
 
 
-@router.post("/", status_code=201, response_model=ProductResponse)
+@router.post("", status_code=201, response_model=ProductResponse)
 def add_product(product: ProductCreate):
     return add_product_in_db(product)
 
@@ -44,7 +44,7 @@ def delete_product(target_id: int):
     return delete_product_by_id(target_id)
 
 
-@router.get("/", response_model=list[ProductResponse])
+@router.get("", response_model=list[ProductResponse])
 def get_by_condition(
     category: str | None = None,
     min_price: float | None = None,

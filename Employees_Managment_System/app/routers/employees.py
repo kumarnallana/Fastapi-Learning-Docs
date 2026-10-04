@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from typing import Annotated
 # pyrefly: ignore [missing-import]
-from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeePartialUpdate, EmployeeFilter
+from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeePartialUpdate, EmployeeFilters
 # pyrefly: ignore [missing-import]
 from services.employees_service import (
     create_new_employee,
@@ -10,7 +10,7 @@ from services.employees_service import (
     update_employee_completeData,
     partially_update_empdata,
     delete_employee_by_id,
-    get_emp_by_filter
+    filter_employee
 )
 
 router = APIRouter(
@@ -19,11 +19,9 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=list[EmployeeResponse])
-def get_employees(filters: Annotated[EmployeeFilter, Depends()]):
-    return get_emp_by_filter(
-        filters.skip, filters.limit, filters.department,  filters.salary
-    )
+@router.get("")
+def get_filtered_emp(filters: Annotated[EmployeeFilters, Depends()]):
+    return filter_employee(filters.skip, filters.limit, filters.department, filters.salary)
 
 
 @router.get("/{target_id}", response_model=EmployeeResponse)

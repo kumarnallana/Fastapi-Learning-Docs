@@ -1,6 +1,9 @@
-from typing import Annotated
-from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate, EmployeePartialUpdate
-from fastapi import HTTPException, status
+from urllib.parse import non_hierarchical
+from pydantic import model_validator
+from typing import Annotated, Any
+from schemas.employee import (EmployeeCreate, EmployeeResponse,
+                              EmployeeUpdate, EmployeePartialUpdate, EmployeeFilters)
+from fastapi import HTTPException, status, Depends
 from datetime import date
 
 
@@ -270,3 +273,19 @@ def delete_employee_by_id(target_id: int):
             "message": f"Employee Not found with id:{target_id}"
         }
     )
+
+
+def filter_employee(Skip: int | None = 0, Limit: int | None = 10, Department: str = "Engineering", Salary: int | None = 20000):
+
+    if Department is not None or Salary is not None:
+        filtered_list: list[dict[str, Any]] = []
+
+        for employee in employees_create:
+            if employee.department.lower() == Department.lower() and employee.salary >= Salary:
+                filtered_list.append(employee)
+
+        start = Skip or 0
+        end = start + (Limit or 0)
+        sliced_filter_list: list[dict[str, Any]] = filtered_list[start: end]
+
+        return sliced_filter_list
