@@ -44,6 +44,10 @@ class EmployeeFilter(BaseModel):
         Query(min_length=3, max_length=20,
               description="Fetching based on the department")
     ] = "Engineering"
+    salary: Annotated[
+        int | None,
+        Query(default=None, ge=200000, description="Filter Employee by Salary")
+    ] = None
 
 
 class EmployeeResponse(BaseModel):

@@ -21,7 +21,9 @@ router = APIRouter(
 
 @router.get("", response_model=list[EmployeeResponse])
 def get_employees(filters: Annotated[EmployeeFilter, Depends()]):
-    return get_emp_by_filter(filters.skip, filters.limit, filters.department)
+    return get_emp_by_filter(
+        filters.skip, filters.limit, filters.department,  filters.salary
+    )
 
 
 @router.get("/{target_id}", response_model=EmployeeResponse)
