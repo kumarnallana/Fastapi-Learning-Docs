@@ -4,8 +4,9 @@ from typing import Annotated
 # pyrefly: ignore [missing-import]
 from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeePartialUpdate, EmployeeFilters
 
-from database.database import get_db
 from sqlalchemy.orm import Session
+from services.employees_service import get_all_employees_data
+from database.database import get_db_session
 
 
 from services.employees_service import (
@@ -18,15 +19,16 @@ from services.employees_service import (
     filter_employee
 )
 
+
 router = APIRouter(
     prefix="/employees",
     tags=["employees"]
 )
 
 
-@router.get("/test", status_code=status.HTTP_201_CREATED)
-def gettind_db(db: Annotated[Session, Depends(get_db)]):
-    return {"message": "Database Started From Routers"}
+@router.get("/test-db-data", response_model=list[EmployeeResponse])
+def get_employee_from_db(db: Annotated[Session, Depends(get_db_session)]):
+    return get_all_employees_data(db)
 
 
 @router.get("", response_model=list[EmployeeResponse])

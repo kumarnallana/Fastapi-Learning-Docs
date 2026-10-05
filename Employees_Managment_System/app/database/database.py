@@ -36,12 +36,10 @@ class Base(DeclarativeBase):
     pass
 
 
-def get_db():
-    db = SessionLocal()
+def get_db_session():
+    db = SessionLocal()  # created a session factory
 
     try:
         yield db
     finally:
         db.close()
-
-    return logging.info(f"Database Session Started successfully")

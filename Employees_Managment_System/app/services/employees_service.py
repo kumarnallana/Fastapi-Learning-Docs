@@ -5,6 +5,8 @@ from schemas.employee import (EmployeeCreate, EmployeeResponse,
                               EmployeeUpdate, EmployeePartialUpdate, EmployeeFilters)
 from fastapi import HTTPException, status, Depends
 from datetime import date
+from sqlalchemy.orm import Session
+from repository.employee_repository import get_all_emp_data
 
 
 employees_create: list[EmployeeCreate] = [
@@ -191,8 +193,12 @@ employees_create: list[EmployeeCreate] = [
 ]
 
 
-def get_all_employees_data():
-    return employees_create
+def get_all_employees_data(db: Session):
+
+    if not get_all_emp_data:
+        raise RuntimeError("Database data is empty")
+
+    return get_all_emp_data(db)
 
 
 def get_employee_by_id(target_id: int) -> EmployeeResponse:

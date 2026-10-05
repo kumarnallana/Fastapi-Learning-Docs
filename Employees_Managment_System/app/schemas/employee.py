@@ -52,7 +52,8 @@ class EmployeeFilters(BaseModel):
     ] = 10
     department: Annotated[
         str | None,
-        Query(default=None, min_length=1, max_length=50, description="Filter by department")
+        Query(default=None, min_length=1, max_length=50,
+              description="Filter by department")
     ] = None
     salary: Annotated[
         int | float | None,
