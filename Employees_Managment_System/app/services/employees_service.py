@@ -275,27 +275,17 @@ def delete_employee_by_id(target_id: int):
     )
 
 
-def filter_employee(
-    skip: int = 0,
-    limit: int = 10,
-    department: str | None = None,
-    salary: int | float | None = None,
-) -> list[EmployeeCreate]:
-    filtered = employees_create
+def filter_employee(Skip: int | None = 0, Limit: int | None = 10, Department: str = "Engineering", Salary: int | None = 20000):
 
-    if department:
-        filtered = [
-            emp for emp in filtered
-            if emp.department.strip().lower() == department.strip().lower()
-        ]
+    if Department is not None or Salary is not None:
+        filtered_list: list[dict[str, Any]] = []
 
-    if salary is not None:
-        filtered = [
-            emp for emp in filtered
-            if emp.salary >= salary
-        ]
+        for employee in employees_create:
+            if employee.department.lower() == Department.lower() and Salary is not None and employee.salary >= Salary:
+                filtered_list.append(employee)
 
-    start = skip or 0
-    end = start + (limit or 10)
-    return filtered[start:end]
+        start = Skip or 0
+        end = start + (Limit or 0)
+        sliced_filter_list: list[dict[str, Any]] = filtered_list[start: end]
 
+        return sliced_filter_list
