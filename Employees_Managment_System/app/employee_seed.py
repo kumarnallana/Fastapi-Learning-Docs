@@ -189,4 +189,5 @@ with SessionLocal() as session:
     session.add_all(employee)
     session.commit()
 
+
 print(f"20 Employees Records Created Successfully")
