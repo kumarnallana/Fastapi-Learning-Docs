@@ -1,8 +1,13 @@
+from fastapi import status
 from fastapi import APIRouter, Depends
 from typing import Annotated
 # pyrefly: ignore [missing-import]
 from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeePartialUpdate, EmployeeFilters
-# pyrefly: ignore [missing-import]
+
+from database.database import get_db
+from sqlalchemy.orm import Session
+
+
 from services.employees_service import (
     create_new_employee,
     get_all_employees_data,
@@ -17,6 +22,11 @@ router = APIRouter(
     prefix="/employees",
     tags=["employees"]
 )
+
+
+@router.get("/test", status_code=status.HTTP_201_CREATED)
+def gettind_db(db: Annotated[Session, Depends(get_db)]):
+    return {"message": "Database Started From Routers"}
 
 
 @router.get("", response_model=list[EmployeeResponse])

@@ -1,7 +1,10 @@
+import logging
 import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
+
+logging.basicConfig(level=logging.INFO)
 
 # Loaind dotenv file
 load_dotenv()
@@ -31,3 +34,14 @@ SessionLocal = sessionmaker(
 
 class Base(DeclarativeBase):
     pass
+
+
+def get_db():
+    db = SessionLocal()
+
+    try:
+        yield db
+    finally:
+        db.close()
+
+    return logging.info(f"Database Session Started successfully")
