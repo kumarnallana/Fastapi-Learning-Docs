@@ -19,7 +19,7 @@ router = APIRouter(
 )
 
 
-@router.get("")
+@router.get("", response_model=list[EmployeeResponse])
 def get_filtered_emp(filters: Annotated[EmployeeFilters, Depends()]):
     return filter_employee(filters.skip, filters.limit, filters.department, filters.salary)
 
