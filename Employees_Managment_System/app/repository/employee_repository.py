@@ -1,3 +1,4 @@
+from dotenv import find_dotenv
 from fastapi import HTTPException, status
 from models.employee import EmployeeBase
 from sqlalchemy.orm import Session
@@ -46,6 +47,25 @@ def update_employee_in_db(db: Session, updated_emp: EmployeeUpdate, target_id: i
     employee_data = db.get(EmployeeBase, target_id)
 
     current_data: dict = updated_emp.model_dump()
+
+    if employee_data is None:
+        return None
+
+    for field, value in current_data.items():
+        setattr(employee_data, field, value)
+
+    db.commit()
+    db.refresh(employee_data)
+
+    return employee_data
+
+
+# PARTIAL UPDATE EMPLOYEE DATA THROUGH ID
+def partial_update_emp(db: Session, updated_emp_data: EmployeePartialUpdate, target_id: int):
+    employee_data = db.get(EmployeeBase, target_id)
+
+    current_data: dict = updated_emp_data.model_dump(
+        exclude_unset=True, exclude={"id"})
 
     if employee_data is None:
         return None
