@@ -1,3 +1,4 @@
+from fastapi import HTTPException, status
 from models.employee import EmployeeBase
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -33,5 +34,21 @@ def create_new_employee(db: Session, employee_data: EmployeeBase):
     db.add(employee_data)
     db.commit()
     db.refresh(employee_data)
+
+    return employee_data
+
+
+def deleted_emp_by_id(db: Session, target_id: int):
+
+    employee_data = db.get(EmployeeBase, target_id)
+
+    if employee_data is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Employee with id {target_id} does not exist"
+        )
+
+    db.delete(employee_data)
+    db.commit()
 
     return employee_data

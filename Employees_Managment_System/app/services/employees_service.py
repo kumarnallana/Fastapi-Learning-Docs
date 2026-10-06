@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from repository.employee_repository import get_all_employees_data, get_employee_by_id, create_new_employee
+from repository.employee_repository import get_all_employees_data, get_employee_by_id, create_new_employee, deleted_emp_by_id
 from models.employee import EmployeeBase
 
 
@@ -25,3 +25,7 @@ def create_employee(db: Session, employee_data: EmployeeBase):
         return []
 
     return employee_data
+
+
+def delete_employee_data(db: Session, target_id: int):
+    return deleted_emp_by_id(db, target_id)
