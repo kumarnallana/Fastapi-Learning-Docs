@@ -68,7 +68,10 @@ def partial_update_emp(db: Session, updated_emp_data: EmployeePartialUpdate, tar
         exclude_unset=True, exclude={"id"})
 
     if employee_data is None:
-        return None
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Employee with id {target_id} does not exist"
+        )
 
     for field, value in current_data.items():
         setattr(employee_data, field, value)
