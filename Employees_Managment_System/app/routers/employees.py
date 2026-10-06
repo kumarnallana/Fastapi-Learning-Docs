@@ -1,23 +1,13 @@
+from models.employee import EmployeeBase
 from fastapi import status
 from fastapi import APIRouter, Depends
 from typing import Annotated
 # pyrefly: ignore [missing-import]
-from schemas.employee import EmployeeCreate, EmployeeResponse, EmployeePartialUpdate, EmployeeFilters
+from schemas.employee import EmployeeResponse, EmployeeCreate
 
 from sqlalchemy.orm import Session
-from services.employees_service import get_all_employees_data
+from services.employees_service import get_all_employees, get_emp_thorugh_id, create_employee
 from database.database import get_db_session
-
-
-from services.employees_service import (
-    create_new_employee,
-    get_all_employees_data,
-    get_employee_by_id,
-    update_employee_completeData,
-    partially_update_empdata,
-    delete_employee_by_id,
-    filter_employee
-)
 
 
 router = APIRouter(
@@ -26,36 +16,20 @@ router = APIRouter(
 )
 
 
-@router.get("/test-db-data", response_model=list[EmployeeResponse])
-def get_employee_from_db(db: Annotated[Session, Depends(get_db_session)]):
-    return get_all_employees_data(db)
-
-
 @router.get("", response_model=list[EmployeeResponse])
-def get_filtered_emp(filters: Annotated[EmployeeFilters, Depends()]):
-    return filter_employee(filters.skip, filters.limit, filters.department, filters.salary)
+def get_employees(db: Annotated[Session, Depends(get_db_session)]):
+    return get_all_employees(db)
 
 
 @router.get("/{target_id}", response_model=EmployeeResponse)
-def get_employee(target_id: int):
-    return get_employee_by_id(target_id)
+def find_employee(db: Annotated[Session, Depends(get_db_session)], target_id: int):
+    return get_emp_thorugh_id(db, target_id)
 
 
-@router.post("", status_code=201)
-def create_employee(employee: EmployeeCreate):
-    return create_new_employee(employee)
+@router.put("", response_model=EmployeeResponse)
+def add_employee_data(db: Annotated[Session, Depends(get_db_session)], employee_data: EmployeeCreate):
+    employe_dict = employee_data.model_dump()
 
+    employee = EmployeeBase(**employe_dict)
 
-@router.put("/{target_id}", response_model=EmployeeResponse)
-def update_employee(target_id: int, updated_emp_data: EmployeeCreate):
-    return update_employee_completeData(target_id, updated_emp_data)
-
-
-@router.patch("/{target_id}", response_model=EmployeeResponse)
-def partial_update(target_id: int, partial_data: EmployeePartialUpdate):
-    return partially_update_empdata(target_id, partial_data)
-
-
-@router.delete("/{target_id}", response_model=EmployeeResponse)
-def delete_employee(target_id: int):
-    return delete_employee_by_id(target_id)
+    return create_employee(db, employee)

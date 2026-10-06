@@ -1,16 +1,37 @@
-from database.database import Base
 from models.employee import EmployeeBase
-from sqlalchemy import select
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 
 
-def get_all_emp_data(db: Session):
+def get_all_employees_data(db: Session):
 
-    # creating select query
-    statement = select(EmployeeBase)
-    # EXECUTING DB STATEMent
-    exec_result = db.execute(statement)
-    # convert the postgresql data rows into a list of sqlalchamey objects
-    Employee_data = exec_result.scalars().all()
+    # WRITING A SELECT QUERY TO RETRIVE DATA FROM THE DATABASE
+    statement = select(EmployeeBase)  # -> SELECT * FROM EmployeeBase
 
-    return Employee_data
+    # EXECUTING STATEMENT
+    exec_statement = db.execute(statement)
+
+    # CONVETING DATABASE ROWS INTO THE SQLALCHMENY MODEL OBJECTS
+    employee_obj = exec_statement.scalars().all()
+
+    return employee_obj
+
+
+# GET EMPLOYEE BY id
+def get_employee_by_id(db: Session, employee_id: int):
+    try:
+        employee = db.get(EmployeeBase, employee_id)
+        return employee
+
+    except Exception as error:
+        return f"Error: {error}"
+
+
+def create_new_employee(db: Session, employee_data: EmployeeBase):
+
+    # ADDING CURRENT EMPLOYEES DATA INTO THE DATABASE
+    db.add(employee_data)
+    db.commit()
+    db.refresh(employee_data)
+
+    return employee_data
