@@ -9,7 +9,7 @@ from repository.employee_repository import (
     deleted_emp_by_id,
 )
 
-from models.employee import EmployeeBase
+from models.employee_model import EmployeeBase
 from schemas.employee import (
     EmployeeUpdate,
     EmployeePartialUpdate
