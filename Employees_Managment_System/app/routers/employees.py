@@ -17,7 +17,7 @@ from services.employees_service import (
 )
 from sqlalchemy.orm import Session
 from typing import Annotated
-from models.employee_model import EmployeeBase
+from models.employee import EmployeeBase
 from fastapi import APIRouter, Depends, HTTPException, status
 # pyrefly: ignore [missing-import]
 
@@ -47,11 +47,12 @@ def find_employee(db: Annotated[Session, Depends(get_db_session)], target_id: in
 
 
 @router.post("", response_model=EmployeeResponse, status_code=status.HTTP_201_CREATED)
-def add_employee(
-    db: Annotated[Session, Depends(get_db_session)],
-    employee_data: EmployeeCreate
-):
-    return create_employee(db, employee_data)
+def add_employee(db: Annotated[Session, Depends(get_db_session)], employee_data: EmployeeCreate):
+    employe_dict = employee_data.model_dump()
+
+    employee = EmployeeBase(**employe_dict)
+
+    return create_employee(db, employee)
 
 
 @router.put("/{target_id}", response_model=EmployeeResponse, status_code=status.HTTP_201_CREATED)
