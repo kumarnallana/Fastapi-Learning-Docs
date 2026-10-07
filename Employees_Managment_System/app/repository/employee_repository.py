@@ -1,6 +1,6 @@
 from dotenv import find_dotenv
 from fastapi import HTTPException, status
-from models.employee import EmployeeBase
+from models.employee_model import EmployeeBase
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from schemas.employee import EmployeeUpdate, EmployeePartialUpdate

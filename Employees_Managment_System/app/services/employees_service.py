@@ -8,12 +8,13 @@ from repository.employee_repository import (
     partial_update_emp,
     deleted_emp_by_id,
 )
-
 from models.employee_model import EmployeeBase
 from schemas.employee import (
+    EmployeeCreate,
     EmployeeUpdate,
     EmployeePartialUpdate
 )
+from auth.auth_utils import password_to_hash
 
 
 def get_all_employees(db: Session):
@@ -34,13 +35,22 @@ def get_emp_thorugh_id(db: Session, employee_id: int):
     return employee
 
 
-def create_employee(db: Session, employee_data: EmployeeBase):
-    employee_data = create_new_employee(db, employee_data)
+def create_employee(db: Session, employee_data: EmployeeCreate):
 
     if not employee_data:
         return []
 
-    return employee_data
+    # HASHING PLAIN RAW PWD INTO THE HASHED PASSWORD
+    hashed_pwd = password_to_hash(employee_data.password)
+
+    current_emp_dict = employee_data.model_dump(exclude={"password"})
+
+    mew_emp_data = EmployeeBase(
+        **current_emp_dict,
+        password_hash=hashed_pwd
+    )
+
+    return create_new_employee(db, mew_emp_data)
 
 
 def update_emp_by_id(db: Session, update_emp_data: EmployeeUpdate, target_id: int):

@@ -1,3 +1,4 @@
+from pydantic import Field
 from fastapi import Query
 from typing import Annotated
 from datetime import date
@@ -7,6 +8,7 @@ from pydantic import BaseModel, ConfigDict
 class EmployeeBase(BaseModel):
     id: int
     name: str
+    hashed_password: str
     role: str
     experience: int
     salary: int | float
@@ -14,8 +16,14 @@ class EmployeeBase(BaseModel):
     joining_date: date
 
 
-class EmployeeCreate(EmployeeBase):
-    pass
+class EmployeeCreate(BaseModel):
+    name: str
+    password: str = Field(..., min_length=8, description="User raw password")
+    role: str
+    experience: int
+    salary: int | float
+    department: str
+    joining_date: date
 
 
 class EmployeeUpdate(EmployeeBase):
