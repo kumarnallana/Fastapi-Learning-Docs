@@ -1,7 +1,7 @@
 from fastapi import Query
 from typing import Annotated
 from datetime import date
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class EmployeeBase(BaseModel):
@@ -15,7 +15,15 @@ class EmployeeBase(BaseModel):
 
 
 class EmployeeCreate(EmployeeBase):
-    pass
+    id: int
+    name: str
+    password: str | int = Field(min_length=4,
+                                description="Employee Raw password")
+    role: str = Field(..., min_length=2)
+    experience: int
+    salary: int | float
+    department: str = Field(..., min_length=4)
+    joining_date: date
 
 
 class EmployeeUpdate(EmployeeBase):
@@ -41,15 +49,20 @@ class EmployeeResponse(BaseModel):
     department: str
 
 
-class EmployeeFilters(BaseModel):
+class Pagination(BaseModel):
+
     skip: Annotated[
         int,
         Query(ge=0, description="Records to skip")
     ] = 0
+
     limit: Annotated[
         int,
         Query(gt=0, le=100, description="Records to fetch")
     ] = 10
+
+
+class EmployeeFilters(BaseModel):
     department: Annotated[
         str | None,
         Query(default=None, min_length=1, max_length=50,
