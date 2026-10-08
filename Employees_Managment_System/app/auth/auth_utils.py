@@ -5,11 +5,7 @@ password_hash_fun = PasswordHash.recommended()
 
 def raw_pwd_to_hash(raw_password: str) -> str:
     converted_pwd = password_hash_fun.hash(raw_password)
-
     return converted_pwd
-
-
-password_to_hash = raw_pwd_to_hash
 
 # METHOD TO VERIFY THE PASSWORD HASH WITH THE RAW PASSWORD
 

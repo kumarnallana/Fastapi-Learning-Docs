@@ -2,6 +2,7 @@ from fastapi import Query
 from typing import Annotated
 from datetime import date
 from pydantic import BaseModel, ConfigDict, Field
+from schemas.departments_schema import DeparmentResponse
 
 
 class EmployeeBase(BaseModel):
@@ -22,8 +23,10 @@ class EmployeeCreate(EmployeeBase):
     role: str = Field(..., min_length=2)
     experience: int
     salary: int | float
-    department: str = Field(..., min_length=4)
+
     joining_date: date
+
+    department_id: int
 
 
 class EmployeeUpdate(EmployeeBase):
@@ -35,8 +38,11 @@ class EmployeePartialUpdate(BaseModel):
     role: str | None = None
     experience: int | None = None
     salary: int | float | None = None
-    department: str | None = None
     joining_date: date | None = None
+
+    department_id: int
+
+    departments: DeparmentResponse
 
 
 class EmployeeResponse(BaseModel):
@@ -46,7 +52,9 @@ class EmployeeResponse(BaseModel):
     name: str
     role: str
     experience: int
-    department: str
+
+    department: int
+    department_name: str
 
 
 class Pagination(BaseModel):

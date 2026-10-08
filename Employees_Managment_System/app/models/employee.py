@@ -1,7 +1,9 @@
+from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, Relationship
 from database.database import Base
 from datetime import date
+from models.department_models import DepartmentsBase
 
 
 class EmployeeBase(Base):
@@ -13,6 +15,12 @@ class EmployeeBase(Base):
     role: Mapped[str]
     experience: Mapped[int]
     salary: Mapped[float]
-    department_id: Mapped[int] = mapped_column()
-    department: Mapped[str]
     joining_date: Mapped[date]
+
+    # CREATING A RELATION BETWEEN THE DEPARTMENT ID TO THE EMPLOYEE
+    department_id: Mapped[int] = mapped_column(
+        ForeignKey("Department_Table.id"), nullable=False)
+
+    # IMPLEMENTED THE EmployeeBase.DepartmentsBase ACCESS WHERE WE CAN ACCESS A EMP DepartmentsBase
+    departments: Mapped["DepartmentsBase"] = Relationship(
+        back_populates="employees")
