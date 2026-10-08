@@ -4,7 +4,7 @@ from typing import Any
 
 from auth.auth_utils import raw_pwd_to_hash
 from database.database import SessionLocal
-from models.employee import EmployeeBase
+from models.employee_model import EmployeeBase
 from schemas.employee_schema import EmployeeCreate
 
 base_dir = Path(__file__).resolve().parent
