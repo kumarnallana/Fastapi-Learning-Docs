@@ -8,6 +8,9 @@ def raw_pwd_to_hash(raw_password: str) -> str:
 
     return converted_pwd
 
+
+password_to_hash = raw_pwd_to_hash
+
 # METHOD TO VERIFY THE PASSWORD HASH WITH THE RAW PASSWORD
 
 

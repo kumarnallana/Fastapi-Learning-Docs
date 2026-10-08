@@ -11,13 +11,16 @@ from repository.employee_repository import (
 
 from models.employee import EmployeeBase
 from schemas.employee import (
+    EmployeeCreate,
     EmployeeUpdate,
-    EmployeePartialUpdate
+    EmployeePartialUpdate,
+    Pagination,
 )
+from auth.auth_utils import password_to_hash
 
 
-def get_all_employees(db: Session):
-    return get_all_employees_data(db)
+def get_all_employees(db: Session, pagination: Pagination):
+    return get_all_employees_data(db, pagination)
 
 
 def get_emp_thorugh_id(db: Session, employee_id: int):
@@ -34,13 +37,21 @@ def get_emp_thorugh_id(db: Session, employee_id: int):
     return employee
 
 
-def create_employee(db: Session, employee_data: EmployeeBase):
-    employee_data = create_new_employee(db, employee_data)
+def create_employee(db: Session, employee_data: EmployeeCreate):
+    # 1. Hash the incoming plaintext password
+    hashed = password_to_hash(employee_data.password)
 
-    if not employee_data:
-        return []
+    # 2. Dump all fields except the plain password and id
+    data_dict = employee_data.model_dump(exclude={"password", "id"})
 
-    return employee_data
+    # 3. Create the SQLAlchemy model instance with the hashed password
+    db_employee = EmployeeBase(
+        **data_dict,
+        password_hash=hashed
+    )
+
+    # 4. Save via repository
+    return create_new_employee(db, db_employee)
 
 
 def update_emp_by_id(db: Session, update_emp_data: EmployeeUpdate, target_id: int):

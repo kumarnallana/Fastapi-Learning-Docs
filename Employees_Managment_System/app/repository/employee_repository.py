@@ -3,21 +3,13 @@ from fastapi import HTTPException, status
 from models.employee import EmployeeBase
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from schemas.employee import EmployeeUpdate, EmployeePartialUpdate
+from schemas.employee import EmployeeUpdate, EmployeePartialUpdate, Pagination
 
 
-def get_all_employees_data(db: Session):
-
-    # WRITING A SELECT QUERY TO RETRIVE DATA FROM THE DATABASE
-    statement = select(EmployeeBase)  # -> SELECT * FROM EmployeeBase
-
-    # EXECUTING STATEMENT
-    exec_statement = db.execute(statement)
-
-    # CONVETING DATABASE ROWS INTO THE SQLALCHMENY MODEL OBJECTS
-    employee_obj = exec_statement.scalars().all()
-
-    return employee_obj
+def get_all_employees_data(db: Session, pagination: Pagination):
+    statement = select(EmployeeBase).offset(pagination.skip).limit(pagination.limit)
+    result = db.execute(statement)
+    return result.scalars().all()
 
 
 # GET EMPLOYEE THROUGH id

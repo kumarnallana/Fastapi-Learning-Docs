@@ -62,7 +62,7 @@ class Pagination(BaseModel):
     ] = 10
 
 
-class EmployeeFilters(BaseModel):
+class EmployeeFilters(Pagination):
     department: Annotated[
         str | None,
         Query(default=None, min_length=1, max_length=50,

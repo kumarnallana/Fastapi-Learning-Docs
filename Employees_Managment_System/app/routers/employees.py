@@ -4,7 +4,8 @@ from schemas.employee import (
     EmployeeResponse,
     EmployeeCreate,
     EmployeeUpdate,
-    EmployeePartialUpdate
+    EmployeePartialUpdate,
+    Pagination,
 )
 from database.database import get_db_session
 from services.employees_service import (
@@ -29,8 +30,11 @@ router = APIRouter(
 
 
 @router.get("", response_model=list[EmployeeResponse], status_code=status.HTTP_200_OK)
-def get_employees(db: Annotated[Session, Depends(get_db_session)]):
-    return get_all_employees(db)
+def get_employees(
+    db: Annotated[Session, Depends(get_db_session)],
+    pagination: Annotated[Pagination, Depends()]
+):
+    return get_all_employees(db, pagination)
 
 
 @router.get("/{target_id}", response_model=EmployeeResponse, status_code=status.HTTP_302_FOUND)
@@ -48,11 +52,7 @@ def find_employee(db: Annotated[Session, Depends(get_db_session)], target_id: in
 
 @router.post("", response_model=EmployeeResponse, status_code=status.HTTP_201_CREATED)
 def add_employee(db: Annotated[Session, Depends(get_db_session)], employee_data: EmployeeCreate):
-    employe_dict = employee_data.model_dump()
-
-    employee = EmployeeBase(**employe_dict)
-
-    return create_employee(db, employee)
+    return create_employee(db, employee_data)
 
 
 @router.put("/{target_id}", response_model=EmployeeResponse, status_code=status.HTTP_201_CREATED)
