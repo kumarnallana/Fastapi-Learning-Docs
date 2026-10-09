@@ -16,7 +16,7 @@ from schemas.employee import (
     EmployeePartialUpdate,
     Pagination,
 )
-from auth.auth_utils import password_to_hash
+from auth.auth_utils import raw_pwd_to_hash
 
 
 def get_all_employees(db: Session, pagination: Pagination):
@@ -39,7 +39,7 @@ def get_emp_thorugh_id(db: Session, employee_id: int):
 
 def create_employee(db: Session, employee_data: EmployeeCreate):
     # 1. Hash the incoming plaintext password
-    hashed = password_to_hash(employee_data.password)
+    hashed = raw_pwd_to_hash(employee_data.password)
 
     # 2. Dump all fields except the plain password and id
     data_dict = employee_data.model_dump(exclude={"password", "id"})

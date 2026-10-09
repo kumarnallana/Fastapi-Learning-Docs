@@ -11,26 +11,22 @@ class EmployeeBase(BaseModel):
     role: str
     experience: int
     salary: int | float
-    department: str
+    department_id: int
     joining_date: date
 
 
 class EmployeeCreate(EmployeeBase):
-    id: int
-    name: str
     password: str | int = Field(min_length=4,
                                 description="Employee Raw password")
-    role: str = Field(..., min_length=2)
+
+
+class EmployeeUpdate(BaseModel):
+    name: str
+    role: str
     experience: int
     salary: int | float
-
-    joining_date: date
-
     department_id: int
-
-
-class EmployeeUpdate(EmployeeBase):
-    pass
+    joining_date: date
 
 
 class EmployeePartialUpdate(BaseModel):
@@ -38,11 +34,8 @@ class EmployeePartialUpdate(BaseModel):
     role: str | None = None
     experience: int | None = None
     salary: int | float | None = None
+    department_id: int | None = None
     joining_date: date | None = None
-
-    department_id: int
-
-    departments: DeparmentResponse
 
 
 class EmployeeResponse(BaseModel):
@@ -52,9 +45,10 @@ class EmployeeResponse(BaseModel):
     name: str
     role: str
     experience: int
-
-    department: int
-    department_name: str
+    salary: int | float
+    joining_date: date
+    department_id: int
+    departments: DeparmentResponse | None = None
 
 
 class Pagination(BaseModel):
