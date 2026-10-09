@@ -4,6 +4,7 @@ from fastapi import Request, status
 from fastapi import FastAPI
 # pyrefly: ignore [missing-import]
 from routers.employees import router as employee_router
+from routers.departments import router as department_router
 
 from sqlalchemy.exc import OperationalError
 
@@ -33,4 +34,5 @@ def root():
     }
 
 
+app.include_router(department_router)
 app.include_router(employee_router)

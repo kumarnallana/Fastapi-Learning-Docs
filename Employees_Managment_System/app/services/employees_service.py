@@ -9,6 +9,7 @@ from repository.employee_repository import (
     deleted_emp_by_id,
 )
 
+from models.department_models import DepartmentsBase
 from models.employee import EmployeeBase
 from schemas.employee import (
     EmployeeCreate,
@@ -38,8 +39,16 @@ def get_emp_thorugh_id(db: Session, employee_id: int):
 
 
 def create_employee(db: Session, employee_data: EmployeeCreate):
+    # Check if department exists
+    dept = db.get(DepartmentsBase, employee_data.department_id)
+    if not dept:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Department with id {employee_data.department_id} not found"
+        )
+
     # 1. Hash the incoming plaintext password
-    hashed = raw_pwd_to_hash(employee_data.password)
+    hashed = raw_pwd_to_hash(str(employee_data.password))
 
     # 2. Dump all fields except the plain password and id
     data_dict = employee_data.model_dump(exclude={"password", "id"})

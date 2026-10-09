@@ -2,9 +2,9 @@ import json
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 from auth.auth_utils import raw_pwd_to_hash
-from database.database import SessionLocal
+from database.database import SessionLocal, engine
 from models.department_models import DepartmentsBase
 from models.employee import EmployeeBase
 from schemas.departments_schema import DepartmentCreate
@@ -27,7 +27,8 @@ def local_db_to_db():
         dept_data_raw = json_data.get(
             "departments", []) if isinstance(json_data, dict) else []
         if dept_data_raw:
-            existing_dept_ids = set(db.scalars(select(DepartmentsBase.id)).all())
+            existing_dept_ids = set(db.scalars(
+                select(DepartmentsBase.id)).all())
             dept_records = [
                 DepartmentsBase(id=d["id"], name=d["name"])
                 for d in dept_data_raw
@@ -60,7 +61,8 @@ def local_db_to_db():
             print("All employees already exist in database, skipping insertion.")
         else:
             total = len(employees_to_seed)
-            print(f"Seeding {total} new employee records. Starting Argon2 password hashing...")
+            print(
+                f"Seeding {total} new employee records. Starting Argon2 password hashing...")
 
             database_storage_data = []
 
@@ -68,7 +70,8 @@ def local_db_to_db():
             pwd_cache: dict[str, str] = {}
 
             for index, employee_data in enumerate(employees_to_seed, start=1):
-                emp_dict: dict[str, Any] = employee_data.model_dump(exclude={"password"})
+                emp_dict: dict[str, Any] = employee_data.model_dump(exclude={
+                                                                    "password"})
 
                 # Check cache or hash
                 raw_pwd = str(employee_data.password)
@@ -91,6 +94,17 @@ def local_db_to_db():
             print(
                 f"Done! {len(database_storage_data)} employees seeded successfully."
             )
+
+        # 3. Synchronize Postgres auto-increment sequences with current MAX(id)
+        with engine.connect() as conn:
+            conn.execute(
+                text('SELECT setval(pg_get_serial_sequence(\'"Department_Table"\', \'id\'), COALESCE(MAX(id), 1)) FROM "Department_Table"')
+            )
+            conn.execute(
+                text('SELECT setval(pg_get_serial_sequence(\'"Employee_Table"\', \'id\'), COALESCE(MAX(id), 1)) FROM "Employee_Table"')
+            )
+            conn.commit()
+        print("Synchronized PostgreSQL ID sequences successfully.")
 
     except Exception as e:
         db.rollback()
