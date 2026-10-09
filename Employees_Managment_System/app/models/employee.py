@@ -1,9 +1,12 @@
 from sqlalchemy import ForeignKey
+from typing import TYPE_CHECKING
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, Relationship
 from database.database import Base
 from datetime import date
-from models.department_models import DepartmentsBase
+
+if TYPE_CHECKING:
+    from models.department_models import DepartmentsBase
 
 
 class EmployeeBase(Base):

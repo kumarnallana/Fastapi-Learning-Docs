@@ -1,13 +1,14 @@
 from dotenv import find_dotenv
 from fastapi import HTTPException, status
-from models.employee import EmployeeBase
+from models.employee_model import EmployeeBase
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from schemas.employee import EmployeeUpdate, EmployeePartialUpdate, Pagination
 
 
 def get_all_employees_data(db: Session, pagination: Pagination):
-    statement = select(EmployeeBase).offset(pagination.skip).limit(pagination.limit)
+    statement = select(EmployeeBase).offset(
+        pagination.skip).limit(pagination.limit)
     result = db.execute(statement)
     return result.scalars().all()
 
