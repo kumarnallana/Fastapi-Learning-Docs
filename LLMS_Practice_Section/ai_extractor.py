@@ -31,6 +31,7 @@ response = client.models.generate_content(
     config=types.GenerateContentConfig(
         response_mime_type="application/json",
         response_schema=ExtractedEmployee,
+        system_instruction="provide me the answer within 20 words"
     ),
 )
 
