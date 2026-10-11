@@ -16,9 +16,9 @@ model_response = client.models.generate_content(
     contents=user_prompt,
     config=types.GenerateContentConfig(
         response_mime_type="application/json",
-        system_instruction="Provide me the response within 20 words",
+        system_instruction="Provide me the response within 50 words",
+        temperature=0.0
     ),
-
 )
 
 print("--------------------------------------")
