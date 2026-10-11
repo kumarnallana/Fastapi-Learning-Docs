@@ -7,7 +7,8 @@ from pathlib import Path
 
 # GETTING EXACT IMAGE PATH TO SOLVE THE FILE PATH ISSUE
 BASE_DIR = Path(__file__).resolve().parent.parent
-IMAGE_PATH = BASE_DIR / "demo_imgs" / "unknown.jpg"
+IMAGE_PATH = BASE_DIR / "demo_imgs" / \
+    "Chris-Evans-title-character-Joe-Johnston-Captain.webp"
 
 load_dotenv()
 
@@ -32,9 +33,9 @@ response = client.models.generate_content(
     config=types.GenerateContentConfig(
         system_instruction="Provide me the response within 50 words, Express Well..",
         # MINIMIZING THE AI CREATIVITY CAPABILITY THROUGH TEMPERATURE
-        temperature=0.0,
+        temperature=2,
         # specifiying a json structure response which looks clean
-        # response_mime_type="application/json"
+        response_mime_type="application/json"
     ),
 )
 
