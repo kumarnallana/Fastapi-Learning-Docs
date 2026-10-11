@@ -5,47 +5,38 @@ from google.genai import types
 from PIL import Image
 from pathlib import Path
 
+# GETTING EXACT IMAGE PATH TO SOLVE THE FILE PATH ISSUE
+BASE_DIR = Path(__file__).resolve().parent.parent
+IMAGE_PATH = BASE_DIR / "demo_imgs" / "unknown.jpg"
 
-def calling_llm():
-    try:
+load_dotenv()
 
-        # IMPORTING EXACT PATH OF THE EXAMPLE IMAGES
-        BASE_DIR = Path(__file__).resolve().parent
-        IMG_PATH = BASE_DIR/"demo_imgs"/"unknown.jpg"
+# TAKING INPUT FROM THE USER
+# user_prompt = input("Ask Something...")
 
-        load_dotenv()
+# SETTING UP GOOGLE GEMINI CLIENT WHERE IT FETCHES GEMINI_API_KEY FROM THE .ENV FILE
+client = genai.Client()
 
-        # TAKING INPUT FROM THE USER
-        # user_prompt = input("Ask Something...")
+# BY USING PYTHON PILLOW LIBRARY TO EVALUATE A Image
+image = Image.open(IMAGE_PATH)
 
-        # SETTING UP GOOGLE GEMINI CLIENT WHERE IT FETCHES GEMINI_API_KEY FROM THE .ENV FILE
-        client = genai.Client()
+print("Response loading feel free to work...")
 
-        # BY USING PYTHON PILLOW LIBRARY TO EVALUATE A Image
-        image = Image.open(IMG_PATH)
-
-        print("Response loading feel free to work...")
-
-        # USING MODELS LIKE GEMINI FLASH - 8 OR OTHER MODELS TO FETCH AND VALIDATE DATA
-        response = client.models.generate_content(
-            model="gemini-3.8-flash",
-            # ANALYZING THE PROVIDED IMAGE THROUGH GEMINI AND GETTING RESULT ABOUT THE IMAGE
-            contents=[
-                image, "Please describe this image and who is the person in the image?"],
-            # NOW USING GIVING INSTRUCTIONS TO THE GEMINI AI
-            config=types.GenerateContentConfig(
-                system_instruction="Provide me the response within 50 words, Express Well..",
-                # MINIMIZING THE AI CREATIVITY CAPABILITY THROUGH TEMPERATURE
-                temperature=0.0,
-                # specifiying a json structure response which looks clean
-                # response_mime_type="application/json"
-            ),
-        )
-
-        print(response.text)
-
-    except Exception as e:
-        return e
+# USING MODELS LIKE GEMINI FLASH - 8 OR OTHER MODELS TO FETCH AND VALIDATE DATA
+response = client.models.generate_content(
+    model="gemini-flash-lite-latest",
+    # ANALYZING THE PROVIDED IMAGE THROUGH GEMINI AND GETTING RESULT ABOUT THE IMAGE
+    contents=[
+        image, "Please describe this image and who is the person in the image?"],
+    # NOW USING GIVING INSTRUCTIONS TO THE GEMINI AI
+    config=types.GenerateContentConfig(
+        system_instruction="Provide me the response within 50 words, Express Well..",
+        # MINIMIZING THE AI CREATIVITY CAPABILITY THROUGH TEMPERATURE
+        temperature=0.0,
+        # specifiying a json structure response which looks clean
+        # response_mime_type="application/json"
+    ),
+)
 
 
-calling_llm()
+print(response.text)
