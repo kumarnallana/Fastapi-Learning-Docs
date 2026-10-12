@@ -1,33 +1,45 @@
+from pyexpat import model
+from urllib.parse import uses_relative
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 
+# LOADING GEMINI_API_KEY THROUGH DOTENV
 load_dotenv()
 
 
-def syora_chat_bot():
+def the_chat_bot():
     try:
+
+        # CREATING GOOGLE CLIENT
         client = genai.Client()
-        chat_history = client.chats.create(model="gemini-flash-lite-latest")
 
-        user_input: str = input(
-            f"what's on your mind today? (note: type endchat to end the conversation)")
+        # GETTING USER NAME THORUGH INPUT
+        user_name = input("Please Enter your name to proceed?")
 
-        while user_input.lower() != "endchat".lower():
+        # CREATING USER_INPUT
+        user_input = input(
+            f"Hello {user_name.lower().strip()} you can start your conversation now, please feel free to type 'endchat' to stop the session!")
 
-            print(f"User: {user_input}")
+        # NOW WE ARE IMPLEMENTING THE DYNAMIC CHAT CONVERSATION WITHOUT ANY MANUALLY APPENDING
+        chat_conversation = client.chats.create(
+            model="gemini-flash-lite-latest")
 
-            response = chat_history.send_message(user_input)
+        # BASED ON CONDITION WE WILL CONTINUE THE CHAT CONVERSATION
+        while user_input.lower().strip() != 'endchat'.lower().strip():
 
-            print(f"Syora AI: {response.text}\n")
+            model_response = chat_conversation.send_message(user_input)
 
-            user_input = input("You (or 'endchat')")
+            print(f"Karen AI: {model_response.text}", end="\n")
 
-        print(f"You Session Has been ended...")
+            user_input = input(
+                f"{user_name} (or you can type 'endchat' to quit)\n")
 
-    except Exception as e:
-        print(f"Error: {e}")
+        print("previous session completed..")
+
+    except Exception as error:
+        print(f"Error occured: {error}", end="/n")
 
 
 if __name__ == "__main__":
-    syora_chat_bot()
+    the_chat_bot()
