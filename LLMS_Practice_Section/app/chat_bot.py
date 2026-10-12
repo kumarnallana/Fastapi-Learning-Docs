@@ -17,7 +17,7 @@ def syora_chat_bot():
             print(f"User: {user_input}")
 
             agent_response = client.models.generate_content(
-                model="gemini-3.1-flash-lite",
+                model="gemini-3.5-flash",
                 contents=user_input,
                 config=types.GenerateContentConfig(
                     system_instruction="Reply with single consist of 20 characters"
