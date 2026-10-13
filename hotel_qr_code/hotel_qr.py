@@ -4,7 +4,8 @@ from qrcode.constants import ERROR_CORRECT_H
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
 
-REVIEW_URL = "https://search.google.com/local/writereview?placeid=ChIJS4FNIggrOjoRTYFNACMrMzA"
+# Official working Google Maps link for N Hotels Pithapuram (no 404 error)
+REVIEW_URL = "https://maps.app.goo.gl/8FMHXgKL3wXwUEBW8"
 OUTPUT_FILE = Path("n_hotels_styled_qr.png")
 
 qr = qrcode.QRCode(
