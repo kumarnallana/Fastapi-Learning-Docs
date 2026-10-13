@@ -1,63 +1,77 @@
+from enum import StrEnum
+from pydantic import BaseModel, Field
 from google import genai
+from google.genai import types
 from dotenv import load_dotenv
-from pydantic import BaseModel
-import enum
-
 
 load_dotenv()
 
-# CREATING A BASE MODEL FOR STRUCTURED RESPONSE
+
+# 1. Define Enum FIRST with string inheritance for clean JSON serialization
+class Grade(StrEnum):
+    A_PLUS = "A+"
+    A = "A"
+    B = "B"
+    C = "C"
 
 
-class Receipe(BaseModel):
-    receipe_name: str
-    key_ingredients: str
-    best_serve_wth: str
-    rating: Grade
+# 2. Rich Pydantic model with Field descriptions to guide the LLM
+class Recipe(BaseModel):
+    name: str = Field(description="Name of the recipe or dish")
+    ingredients: list[str] = Field(
+        description="List of key ingredients required")
+    best_served_with: str = Field(
+        description="Recommended side dish or drink pairing")
+    rating: Grade = Field(
+        description="Overall difficulty or quality rating grade")
 
 
-# CREATING A ENUM class
-class Grade(enum.Enum):
-    A_PLUS = 'a+'
-    A = "a"
-    B = "b"
-    C = "c"
-
-
-def structured_response():
+def structured_recipe_bot():
     try:
-        # CREATING A GOOGLE CLIENT
         client = genai.Client()
 
-        # getting user name through user input
-        user_name = input("Please enter you name to continue: ")
+        # 3. Typed GenerateContentConfig with temperature tuning
+        recipe_config = types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=list[Recipe],
+            temperature=0.2,  # Low temperature guarantees strict schema adherence
+            system_instruction="You are a professional chef. Provide recipes in structured format.",
+        )
 
-        user_input = input(
-            f"{user_name},What's on you'r mind today?: ").strip()
+        user_name = input("Please enter your name: ").strip()
+        print(
+            f"\nWelcome {user_name}! Ask for any recipes (type 'endchat' to quit).\n")
 
-        while user_input.lower() != "endchat".lower():
-            # GETTING RESPONSE FROM THE MODEL
-            model_response = client.models.generate_content(
+        while True:
+            user_input = input(f"{user_name}: ").strip()
+
+            if user_input.lower() == "endchat":
+                print(
+                    f"\nGlad to meet you {user_name}, have a wonderful day! 👋\n")
+                break
+
+            if not user_input:
+                continue
+
+            # 4. Generate structured content
+            response = client.models.generate_content(
                 model="gemini-flash-lite-latest",
                 contents=user_input,
-                config={
-                    "response_schema": list[Receipe],
-                    "response_mime_type": "application/json"
-                }
+                config=recipe_config,
             )
 
-            print(model_response.text)
+            # 5. Access the automatically validated Pydantic objects via response.parsed
+            recipes: list[Recipe] = response.parsed
 
-            user_input = input(f"{user_name} (or enter 'endchat' to quit)")
-
-        if user_input == "endchat":
-            print(f"glad to meet you {user_name} have a nice day!!")
-
-        print("Chat conversation ended!!")
+            print("\n--- Extracted Recipes ---")
+            for recipe in recipes:
+                print(f"🍽️  {recipe.name} [Grade: {recipe.rating.value}]")
+                print(f"   Ingredients: {', '.join(recipe.ingredients)}")
+                print(f"   Best with:   {recipe.best_served_with}\n")
 
     except Exception as error:
         print(f"Error: {error}\n")
 
 
 if __name__ == "__main__":
-    structured_response()
+    structured_recipe_bot()
