@@ -1,4 +1,5 @@
 from enum import StrEnum
+from typing import cast
 from pydantic import BaseModel, Field
 from google import genai
 from google.genai import types
@@ -61,7 +62,11 @@ def structured_recipe_bot():
             )
 
             # 5. Access the automatically validated Pydantic objects via response.parsed
-            recipes: list[Recipe] = response.parsed
+            if not isinstance(response.parsed, list):
+                print("Failed to extract recipes or empty response from model.\n")
+                continue
+
+            recipes = cast(list[Recipe], response.parsed)
 
             print("\n--- Extracted Recipes ---")
             for recipe in recipes:
