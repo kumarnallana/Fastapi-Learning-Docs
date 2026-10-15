@@ -1,32 +1,45 @@
 import ollama
 
 
-class LocalChat:
-    def __init__(self, model: str = "llama3.2"):
+class LocalChat():
+    def __init__(self, model: str):
         self.model = model
         self.history = []
 
-    def send_message(self, text: str) -> str:
-        self.history.append({"role": "user", "content": text})
-        response = ollama.chat(model=self.model, messages=self.history)
-        reply = response["message"]["content"]
-        self.history.append({"role": "assistant", "content": reply})
+    def send_message(self, text: str):
+        self.history.append({
+            "role": "user",
+            "content": text
+        })
+        model_response = ollama.chat(
+            model=self.model,
+            messages=self.history
+        )
+        reply = model_response["messages"]["content"]
+
+        self.history.append({
+            "role": "Syora AI",
+            "content": reply
+        })
+
         return reply
 
 
 if __name__ == "__main__":
-    chat = LocalChat("llama3.2")
-    print("Ollama Local Chatbot ready! (Type 'endchat' or 'exit' to quit)\n")
+    chat_bot = LocalChat("llama3.2")
+
+    chat_end_commands = ["endchat", "quit", "exit"]
 
     while True:
-        user_input = input("You: ").strip()
+        user_input = input(
+            f"What's in your mind today? (enter {chat_end_commands} to stop conversation)").strip()
 
-        if user_input.lower() in ("endchat", "exit", "quit"):
-            print("\nSession ended. Goodbye! 👋")
+        if user_input.lower() in chat_end_commands:
+            print("it's glad that i meet you see you soon..")
             break
 
         if not user_input:
             continue
 
-        response = chat.send_message(user_input)
-        print(f"Ollama: {response}\n")
+        syora_response = chat_bot.send_message(user_input)
+        print(f"Syora AI: {syora_response}")

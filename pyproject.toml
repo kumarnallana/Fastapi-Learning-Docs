@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "google-genai>=2.29.0",
+    "ollama>=0.6.3",
     "pillow>=12.3.0",
     "psycopg[binary]>=3.3.6",
     "pwdlib[argon2]>=0.3.1",
