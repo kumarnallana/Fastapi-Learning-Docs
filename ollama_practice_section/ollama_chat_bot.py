@@ -15,7 +15,7 @@ class LocalChat():
             model=self.model,
             messages=self.history
         )
-        reply = model_response["messages"]["content"]
+        reply = model_response["message"]["content"]
 
         self.history.append({
             "role": "Syora AI",
