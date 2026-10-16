@@ -1,10 +1,16 @@
 import ollama
 
-# 1. Turn words into numbers
-response = ollama.embed(model="nomic-embed-text", input="FastAPI backend")
+documents = [
+    "search_document: FastAPI is a modern Python web framework for building APIs.",
+    "search_document: Next.js is a React framework for building full-stack web applications.",
+    "search_query: What Python tool should I use for a web backend?"
+]
 
-# 2. Grab the list of numbers
-vector = response["embeddings"][0]
+ollama_response = ollama.embed(
+    model="nomic-embed-text",
+    input=documents
+)
 
-print("Total numbers generated:", len(vector))
-print("First 5 numbers:", vector[:5])
+print(ollama_response["embeddings"][0])
+# print(ollama_response[1])
+# print(ollama_response[2])
