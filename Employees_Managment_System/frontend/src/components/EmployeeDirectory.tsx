@@ -26,6 +26,7 @@ interface EmployeeDirectoryProps {
   onOpenAddModal?: () => void;
   onEditEmployee?: (employee: Employee) => void;
   onDeleteEmployee?: (employee: Employee) => void;
+  onSelectEmployee?: (employee: Employee) => void;
   initialDepartmentId?: string;
 }
 
@@ -37,6 +38,7 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
   onOpenAddModal,
   onEditEmployee,
   onDeleteEmployee,
+  onSelectEmployee,
   initialDepartmentId,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -339,7 +341,8 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
                   return (
                     <tr
                       key={emp.id}
-                      className="hover:bg-slate-800/30 transition-colors group cursor-default"
+                      onClick={() => onSelectEmployee?.(emp)}
+                      className="hover:bg-slate-800/40 transition-colors group cursor-pointer"
                     >
                       {/* Name & ID */}
                       <td className="px-6 py-4">
@@ -408,7 +411,10 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
                         <div className="flex items-center justify-end gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
                           {onEditEmployee && (
                             <button
-                              onClick={() => onEditEmployee(emp)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onEditEmployee(emp);
+                              }}
                               title={`Edit ${emp.name}`}
                               className="p-1.5 rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-800 hover:text-indigo-400 text-slate-400 transition-colors"
                             >
@@ -417,7 +423,10 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
                           )}
                           {onDeleteEmployee && (
                             <button
-                              onClick={() => onDeleteEmployee(emp)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onDeleteEmployee(emp);
+                              }}
                               title={`Delete ${emp.name}`}
                               className="p-1.5 rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-rose-950/60 hover:border-rose-800/60 hover:text-rose-400 text-slate-400 transition-colors"
                             >

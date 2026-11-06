@@ -19,6 +19,7 @@ import { DeleteConfirmModal } from './components/DeleteConfirmModal';
 import { DepartmentManager } from './components/DepartmentManager';
 import { EditEmployeeModal } from './components/EditEmployeeModal';
 import { EmployeeDirectory } from './components/EmployeeDirectory';
+import { EmployeeProfileDrawer } from './components/EmployeeProfileDrawer';
 import { api } from './services/api';
 import type { Department, Employee, SystemHealth } from './types';
 
@@ -37,6 +38,7 @@ export default function App() {
   const [selectedDirectoryDeptId, setSelectedDirectoryDeptId] = useState<string | undefined>(undefined);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [deletingEmployee, setDeletingEmployee] = useState<Employee | null>(null);
+  const [selectedEmployeeProfile, setSelectedEmployeeProfile] = useState<Employee | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleEmployeeCreated = (newEmp: Employee) => {
@@ -338,6 +340,7 @@ export default function App() {
                 onOpenAddModal={() => setIsAddModalOpen(true)}
                 onEditEmployee={(emp) => setEditingEmployee(emp)}
                 onDeleteEmployee={(emp) => setDeletingEmployee(emp)}
+                onSelectEmployee={(emp) => setSelectedEmployeeProfile(emp)}
               />
             </section>
           </div>
@@ -360,6 +363,7 @@ export default function App() {
               onOpenAddModal={() => setIsAddModalOpen(true)}
               onEditEmployee={(emp) => setEditingEmployee(emp)}
               onDeleteEmployee={(emp) => setDeletingEmployee(emp)}
+              onSelectEmployee={(emp) => setSelectedEmployeeProfile(emp)}
               initialDepartmentId={selectedDirectoryDeptId}
             />
           </div>
@@ -414,6 +418,17 @@ export default function App() {
         employee={deletingEmployee}
         onClose={() => setDeletingEmployee(null)}
         onDeleted={handleEmployeeDeleted}
+      />
+
+      {/* Employee Profile Detail Drawer */}
+      <EmployeeProfileDrawer
+        isOpen={Boolean(selectedEmployeeProfile)}
+        employee={selectedEmployeeProfile}
+        departments={departments}
+        allEmployees={employees}
+        onClose={() => setSelectedEmployeeProfile(null)}
+        onEdit={(emp) => setEditingEmployee(emp)}
+        onDelete={(emp) => setDeletingEmployee(emp)}
       />
 
       {/* Footer */}
