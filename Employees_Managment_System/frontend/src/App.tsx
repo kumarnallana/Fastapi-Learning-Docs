@@ -13,6 +13,8 @@ import {
   Users,
 } from 'lucide-react';
 import { AddEmployeeModal } from './components/AddEmployeeModal';
+import { DeleteConfirmModal } from './components/DeleteConfirmModal';
+import { EditEmployeeModal } from './components/EditEmployeeModal';
 import { EmployeeDirectory } from './components/EmployeeDirectory';
 import { api } from './services/api';
 import type { Department, Employee, SystemHealth } from './types';
@@ -28,11 +30,25 @@ export default function App() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [activeTab, setActiveTab] = useState<'overview' | 'employees' | 'departments'>('overview');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [deletingEmployee, setDeletingEmployee] = useState<Employee | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleEmployeeCreated = (newEmp: Employee) => {
     setEmployees((prev) => [newEmp, ...prev]);
     setToastMessage(`Successfully registered ${newEmp.name} (ID: #${newEmp.id})`);
+    setTimeout(() => setToastMessage(null), 5000);
+  };
+
+  const handleEmployeeUpdated = (updatedEmp: Employee) => {
+    setEmployees((prev) => prev.map((e) => (e.id === updatedEmp.id ? updatedEmp : e)));
+    setToastMessage(`Updated profile for ${updatedEmp.name} (ID: #${updatedEmp.id})`);
+    setTimeout(() => setToastMessage(null), 5000);
+  };
+
+  const handleEmployeeDeleted = (deletedId: number) => {
+    setEmployees((prev) => prev.filter((e) => e.id !== deletedId));
+    setToastMessage(`Removed employee record #${deletedId} from directory`);
     setTimeout(() => setToastMessage(null), 5000);
   };
 
@@ -301,6 +317,8 @@ export default function App() {
                 loading={loading}
                 onRefresh={fetchData}
                 onOpenAddModal={() => setIsAddModalOpen(true)}
+                onEditEmployee={(emp) => setEditingEmployee(emp)}
+                onDeleteEmployee={(emp) => setDeletingEmployee(emp)}
               />
             </section>
           </div>
@@ -321,6 +339,8 @@ export default function App() {
               loading={loading}
               onRefresh={fetchData}
               onOpenAddModal={() => setIsAddModalOpen(true)}
+              onEditEmployee={(emp) => setEditingEmployee(emp)}
+              onDeleteEmployee={(emp) => setDeletingEmployee(emp)}
             />
           </div>
         )}
@@ -390,6 +410,23 @@ export default function App() {
         onClose={() => setIsAddModalOpen(false)}
         departments={departments}
         onEmployeeCreated={handleEmployeeCreated}
+      />
+
+      {/* Edit Employee Modal */}
+      <EditEmployeeModal
+        isOpen={Boolean(editingEmployee)}
+        employee={editingEmployee}
+        departments={departments}
+        onClose={() => setEditingEmployee(null)}
+        onEmployeeUpdated={handleEmployeeUpdated}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={Boolean(deletingEmployee)}
+        employee={deletingEmployee}
+        onClose={() => setDeletingEmployee(null)}
+        onDeleted={handleEmployeeDeleted}
       />
 
       {/* Footer */}

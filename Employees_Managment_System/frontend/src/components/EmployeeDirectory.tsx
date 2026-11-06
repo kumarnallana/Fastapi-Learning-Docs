@@ -5,11 +5,13 @@ import {
   ChevronLeft,
   ChevronRight,
   DollarSign,
+  Edit3,
   Filter,
   Plus,
   RefreshCw,
   Search,
   Sparkles,
+  Trash2,
   UserCheck,
   Users,
   X,
@@ -22,6 +24,8 @@ interface EmployeeDirectoryProps {
   loading: boolean;
   onRefresh: () => void;
   onOpenAddModal?: () => void;
+  onEditEmployee?: (employee: Employee) => void;
+  onDeleteEmployee?: (employee: Employee) => void;
 }
 
 export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
@@ -30,6 +34,8 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
   loading,
   onRefresh,
   onOpenAddModal,
+  onEditEmployee,
+  onDeleteEmployee,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDeptId, setSelectedDeptId] = useState<string>('all');
@@ -246,6 +252,9 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
                 <th scope="col" className="px-6 py-4 font-semibold text-right">
                   Joined
                 </th>
+                <th scope="col" className="px-6 py-4 font-semibold text-right">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60">
@@ -277,12 +286,15 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
                     <td className="px-6 py-4 text-right">
                       <div className="w-20 h-4 rounded bg-slate-800 ml-auto" />
                     </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="w-16 h-4 rounded bg-slate-800 ml-auto" />
+                    </td>
                   </tr>
                 ))
               ) : paginatedEmployees.length === 0 ? (
                 // Empty state
                 <tr>
-                  <td colSpan={6} className="px-6 py-16 text-center">
+                  <td colSpan={7} className="px-6 py-16 text-center">
                     <div className="max-w-sm mx-auto space-y-3">
                       <div className="w-12 h-12 rounded-full bg-slate-800/80 flex items-center justify-center mx-auto text-slate-500">
                         <Users className="w-6 h-6" />
@@ -379,6 +391,30 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
                         <div className="inline-flex items-center gap-1.5 text-xs text-slate-400 font-mono">
                           <Calendar className="w-3.5 h-3.5 text-slate-500" />
                           <span>{emp.joining_date}</span>
+                        </div>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
+                          {onEditEmployee && (
+                            <button
+                              onClick={() => onEditEmployee(emp)}
+                              title={`Edit ${emp.name}`}
+                              className="p-1.5 rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-800 hover:text-indigo-400 text-slate-400 transition-colors"
+                            >
+                              <Edit3 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                          {onDeleteEmployee && (
+                            <button
+                              onClick={() => onDeleteEmployee(emp)}
+                              title={`Delete ${emp.name}`}
+                              className="p-1.5 rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-rose-950/60 hover:border-rose-800/60 hover:text-rose-400 text-slate-400 transition-colors"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
