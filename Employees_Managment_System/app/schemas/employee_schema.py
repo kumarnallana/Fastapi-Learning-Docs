@@ -6,7 +6,7 @@ from schemas.departments_schema import DeparmentResponse
 
 
 class EmployeeBase(BaseModel):
-    id: int
+    id: int | None = None
     name: str
     role: str
     experience: int

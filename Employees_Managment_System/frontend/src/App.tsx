@@ -3,13 +3,16 @@ import {
   Activity,
   ArrowRight,
   Building2,
+  CheckCircle2,
   ExternalLink,
   Layers,
+  Plus,
   RefreshCw,
   Server,
   Sparkles,
   Users,
 } from 'lucide-react';
+import { AddEmployeeModal } from './components/AddEmployeeModal';
 import { EmployeeDirectory } from './components/EmployeeDirectory';
 import { api } from './services/api';
 import type { Department, Employee, SystemHealth } from './types';
@@ -24,6 +27,14 @@ export default function App() {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [activeTab, setActiveTab] = useState<'overview' | 'employees' | 'departments'>('overview');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const handleEmployeeCreated = (newEmp: Employee) => {
+    setEmployees((prev) => [newEmp, ...prev]);
+    setToastMessage(`Successfully registered ${newEmp.name} (ID: #${newEmp.id})`);
+    setTimeout(() => setToastMessage(null), 5000);
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -143,6 +154,14 @@ export default function App() {
               className="p-2 rounded-lg border border-slate-800 bg-slate-900/60 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+
+            <button
+              onClick={() => setIsAddModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Add Member</span>
             </button>
 
             <a
@@ -281,6 +300,7 @@ export default function App() {
                 departments={departments}
                 loading={loading}
                 onRefresh={fetchData}
+                onOpenAddModal={() => setIsAddModalOpen(true)}
               />
             </section>
           </div>
@@ -300,6 +320,7 @@ export default function App() {
               departments={departments}
               loading={loading}
               onRefresh={fetchData}
+              onOpenAddModal={() => setIsAddModalOpen(true)}
             />
           </div>
         )}
@@ -354,6 +375,22 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {/* Toast Alert */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 text-xs font-semibold shadow-2xl animate-bounce">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Add Employee Modal */}
+      <AddEmployeeModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        departments={departments}
+        onEmployeeCreated={handleEmployeeCreated}
+      />
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 bg-slate-950 py-6 text-center text-xs text-slate-500">

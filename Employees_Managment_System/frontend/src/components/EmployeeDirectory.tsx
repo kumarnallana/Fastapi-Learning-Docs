@@ -6,6 +6,7 @@ import {
   ChevronRight,
   DollarSign,
   Filter,
+  Plus,
   RefreshCw,
   Search,
   Sparkles,
@@ -20,6 +21,7 @@ interface EmployeeDirectoryProps {
   departments: Department[];
   loading: boolean;
   onRefresh: () => void;
+  onOpenAddModal?: () => void;
 }
 
 export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
@@ -27,6 +29,7 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
   departments,
   loading,
   onRefresh,
+  onOpenAddModal,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDeptId, setSelectedDeptId] = useState<string>('all');
@@ -182,6 +185,17 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
+
+            {/* Add Employee Button */}
+            {onOpenAddModal && (
+              <button
+                onClick={onOpenAddModal}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add Employee</span>
+              </button>
+            )}
           </div>
         </div>
 
