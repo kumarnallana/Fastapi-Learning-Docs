@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { AddDepartmentModal } from './components/AddDepartmentModal';
 import { AddEmployeeModal } from './components/AddEmployeeModal';
+import { AnalyticsDashboard } from './components/AnalyticsDashboard';
 import { DeleteConfirmModal } from './components/DeleteConfirmModal';
 import { DepartmentManager } from './components/DepartmentManager';
 import { EditEmployeeModal } from './components/EditEmployeeModal';
@@ -312,6 +313,9 @@ export default function App() {
                 <p className="mt-1 text-xs text-slate-500 truncate">{health.message}</p>
               </div>
             </section>
+
+            {/* Executive Analytics Dashboard */}
+            <AnalyticsDashboard employees={employees} departments={departments} />
 
             {/* Quick Preview of Employee Directory */}
             <section className="space-y-4">
