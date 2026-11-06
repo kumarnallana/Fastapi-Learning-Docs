@@ -20,6 +20,7 @@ import { DepartmentManager } from './components/DepartmentManager';
 import { EditEmployeeModal } from './components/EditEmployeeModal';
 import { EmployeeDirectory } from './components/EmployeeDirectory';
 import { EmployeeProfileDrawer } from './components/EmployeeProfileDrawer';
+import { SystemDiagnosticsModal } from './components/SystemDiagnosticsModal';
 import { api } from './services/api';
 import type { Department, Employee, SystemHealth } from './types';
 
@@ -35,6 +36,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'overview' | 'employees' | 'departments'>('overview');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddDeptModalOpen, setIsAddDeptModalOpen] = useState(false);
+  const [isDiagnosticsOpen, setIsDiagnosticsOpen] = useState(false);
   const [selectedDirectoryDeptId, setSelectedDirectoryDeptId] = useState<string | undefined>(undefined);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [deletingEmployee, setDeletingEmployee] = useState<Employee | null>(null);
@@ -164,11 +166,13 @@ export default function App() {
 
           {/* Status Indicator & Live Actions */}
           <div className="flex items-center gap-3">
-            <div
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+            <button
+              onClick={() => setIsDiagnosticsOpen(true)}
+              title="Inspect System Architecture & Live Diagnostics"
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer ${
                 health.connected
-                  ? 'bg-emerald-950/40 text-emerald-300 border-emerald-800/60'
-                  : 'bg-amber-950/40 text-amber-300 border-amber-800/60'
+                  ? 'bg-emerald-950/40 hover:bg-emerald-950/70 text-emerald-300 border-emerald-800/60 hover:border-emerald-600'
+                  : 'bg-amber-950/40 hover:bg-amber-950/70 text-amber-300 border-amber-800/60 hover:border-amber-600'
               }`}
             >
               <span
@@ -179,7 +183,7 @@ export default function App() {
               <span className="hidden sm:inline">
                 {health.connected ? 'FastAPI Online' : 'In-Memory Mode'}
               </span>
-            </div>
+            </button>
 
             <button
               onClick={fetchData}
@@ -429,6 +433,16 @@ export default function App() {
         onClose={() => setSelectedEmployeeProfile(null)}
         onEdit={(emp) => setEditingEmployee(emp)}
         onDelete={(emp) => setDeletingEmployee(emp)}
+      />
+
+      {/* System Architecture & Diagnostics Modal */}
+      <SystemDiagnosticsModal
+        isOpen={isDiagnosticsOpen}
+        onClose={() => setIsDiagnosticsOpen(false)}
+        health={health}
+        totalEmployees={employees.length}
+        totalDepartments={departments.length}
+        onRefreshData={fetchData}
       />
 
       {/* Footer */}
