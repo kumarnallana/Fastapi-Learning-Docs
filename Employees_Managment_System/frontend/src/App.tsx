@@ -12,8 +12,10 @@ import {
   Sparkles,
   Users,
 } from 'lucide-react';
+import { AddDepartmentModal } from './components/AddDepartmentModal';
 import { AddEmployeeModal } from './components/AddEmployeeModal';
 import { DeleteConfirmModal } from './components/DeleteConfirmModal';
+import { DepartmentManager } from './components/DepartmentManager';
 import { EditEmployeeModal } from './components/EditEmployeeModal';
 import { EmployeeDirectory } from './components/EmployeeDirectory';
 import { api } from './services/api';
@@ -30,6 +32,8 @@ export default function App() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [activeTab, setActiveTab] = useState<'overview' | 'employees' | 'departments'>('overview');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isAddDeptModalOpen, setIsAddDeptModalOpen] = useState(false);
+  const [selectedDirectoryDeptId, setSelectedDirectoryDeptId] = useState<string | undefined>(undefined);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [deletingEmployee, setDeletingEmployee] = useState<Employee | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -38,6 +42,17 @@ export default function App() {
     setEmployees((prev) => [newEmp, ...prev]);
     setToastMessage(`Successfully registered ${newEmp.name} (ID: #${newEmp.id})`);
     setTimeout(() => setToastMessage(null), 5000);
+  };
+
+  const handleDepartmentCreated = (newDept: Department) => {
+    setDepartments((prev) => [...prev, newDept]);
+    setToastMessage(`Created department "${newDept.name}" (ID: #${newDept.id})`);
+    setTimeout(() => setToastMessage(null), 5000);
+  };
+
+  const handleFilterByDepartment = (deptId: number) => {
+    setSelectedDirectoryDeptId(String(deptId));
+    setActiveTab('employees');
   };
 
   const handleEmployeeUpdated = (updatedEmp: Employee) => {
@@ -341,58 +356,19 @@ export default function App() {
               onOpenAddModal={() => setIsAddModalOpen(true)}
               onEditEmployee={(emp) => setEditingEmployee(emp)}
               onDeleteEmployee={(emp) => setDeletingEmployee(emp)}
+              initialDepartmentId={selectedDirectoryDeptId}
             />
           </div>
         )}
 
         {/* Tab 3: Departments View */}
         {activeTab === 'departments' && (
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-2xl font-bold text-white tracking-tight">Departments Overview</h1>
-              <p className="text-sm text-slate-400">
-                Departmental breakdown and headcount distribution.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {departments.map((dept) => {
-                const deptEmployees = employees.filter((e) => e.department_id === dept.id);
-                const deptPayroll = deptEmployees.reduce(
-                  (acc, curr) => acc + Number(curr.salary || 0),
-                  0
-                );
-
-                return (
-                  <div
-                    key={dept.id}
-                    className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5 space-y-4 hover:border-slate-700/80 transition-all shadow-lg"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
-                        <Building2 className="w-5 h-5" />
-                      </div>
-                      <span className="text-xs font-mono text-slate-500">DEPT-0{dept.id}</span>
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-bold text-white">{dept.name}</h3>
-                      <p className="text-xs text-slate-400 mt-1">
-                        {deptEmployees.length} registered {deptEmployees.length === 1 ? 'member' : 'members'}
-                      </p>
-                    </div>
-
-                    <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                      <span className="text-slate-400">Total Dept Payroll</span>
-                      <span className="font-mono font-semibold text-emerald-400">
-                        ${deptPayroll.toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <DepartmentManager
+            departments={departments}
+            employees={employees}
+            onOpenAddDeptModal={() => setIsAddDeptModalOpen(true)}
+            onFilterByDepartment={handleFilterByDepartment}
+          />
         )}
       </main>
 
@@ -410,6 +386,13 @@ export default function App() {
         onClose={() => setIsAddModalOpen(false)}
         departments={departments}
         onEmployeeCreated={handleEmployeeCreated}
+      />
+
+      {/* Add Department Modal */}
+      <AddDepartmentModal
+        isOpen={isAddDeptModalOpen}
+        onClose={() => setIsAddDeptModalOpen(false)}
+        onDepartmentCreated={handleDepartmentCreated}
       />
 
       {/* Edit Employee Modal */}

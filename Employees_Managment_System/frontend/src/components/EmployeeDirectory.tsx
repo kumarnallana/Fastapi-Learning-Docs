@@ -26,6 +26,7 @@ interface EmployeeDirectoryProps {
   onOpenAddModal?: () => void;
   onEditEmployee?: (employee: Employee) => void;
   onDeleteEmployee?: (employee: Employee) => void;
+  initialDepartmentId?: string;
 }
 
 export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
@@ -36,9 +37,17 @@ export const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({
   onOpenAddModal,
   onEditEmployee,
   onDeleteEmployee,
+  initialDepartmentId,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDeptId, setSelectedDeptId] = useState<string>('all');
+  const [selectedDeptId, setSelectedDeptId] = useState<string>(initialDepartmentId || 'all');
+
+  React.useEffect(() => {
+    if (initialDepartmentId) {
+      setSelectedDeptId(initialDepartmentId);
+      setCurrentPage(1);
+    }
+  }, [initialDepartmentId]);
   const [sortBy, setSortBy] = useState<'name' | 'salary-desc' | 'salary-asc' | 'experience' | 'date'>(
     'name'
   );

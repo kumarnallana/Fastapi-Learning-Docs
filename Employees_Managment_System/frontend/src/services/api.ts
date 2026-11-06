@@ -50,6 +50,32 @@ class ApiClient {
     }
   }
 
+  async createDepartment(payload: { name: string }): Promise<Department> {
+    try {
+      const res = await fetch(`${this.baseUrl}/departments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.detail || 'Failed to create department');
+      }
+      return await res.json();
+    } catch (e: any) {
+      if (e?.message && !e.message.includes('fetch')) throw e;
+      const newDept: Department = {
+        id: Math.max(...this.localDepartments.map((d) => d.id), 0) + 1,
+        name: payload.name,
+      };
+      this.localDepartments.push(newDept);
+      return newDept;
+    }
+  }
+
   async getEmployees(skip = 0, limit = 100): Promise<Employee[]> {
     try {
       const res = await fetch(`${this.baseUrl}/employees?skip=${skip}&limit=${limit}`, {
