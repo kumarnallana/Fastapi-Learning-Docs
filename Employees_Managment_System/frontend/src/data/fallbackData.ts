@@ -1,0 +1,220 @@
+import type { Department, Employee } from '../types';
+
+export const FALLBACK_DEPARTMENTS: Department[] = [
+  { id: 1, name: "Engineering" },
+  { id: 2, name: "Human Resources" },
+  { id: 3, name: "Design" },
+  { id: 4, name: "Product" },
+  { id: 5, name: "Data Science" },
+  { id: 6, name: "Infrastructure" },
+  { id: 7, name: "Finance" },
+  { id: 8, name: "Quality Assurance" },
+  { id: 9, name: "Marketing" },
+  { id: 10, name: "Sales" },
+  { id: 11, name: "Support" },
+  { id: 12, name: "Security" }
+];
+
+export const FALLBACK_EMPLOYEES: Employee[] = [
+  {
+    id: 101,
+    name: "Aarav Sharma",
+    role: "Software Engineer",
+    experience: 3,
+    salary: 275000,
+    department_id: 1,
+    joining_date: "2023-01-10",
+    departments: { id: 1, name: "Engineering" }
+  },
+  {
+    id: 102,
+    name: "Priya Patel",
+    role: "HR Specialist",
+    experience: 4,
+    salary: 260000,
+    department_id: 2,
+    joining_date: "2022-02-15",
+    departments: { id: 2, name: "Human Resources" }
+  },
+  {
+    id: 103,
+    name: "Rohan Verma",
+    role: "Senior Backend Developer",
+    experience: 6,
+    salary: 310000,
+    department_id: 1,
+    joining_date: "2020-03-20",
+    departments: { id: 1, name: "Engineering" }
+  },
+  {
+    id: 104,
+    name: "Sneha Reddy",
+    role: "UI/UX Designer",
+    experience: 3,
+    salary: 245000,
+    department_id: 3,
+    joining_date: "2023-04-05",
+    departments: { id: 3, name: "Design" }
+  },
+  {
+    id: 105,
+    name: "Vikram Malhotra",
+    role: "Product Manager",
+    experience: 7,
+    salary: 350000,
+    department_id: 4,
+    joining_date: "2019-05-12",
+    departments: { id: 4, name: "Product" }
+  },
+  {
+    id: 106,
+    name: "Ananya Iyer",
+    role: "Data Scientist",
+    experience: 4,
+    salary: 290000,
+    department_id: 5,
+    joining_date: "2022-06-18",
+    departments: { id: 5, name: "Data Science" }
+  },
+  {
+    id: 107,
+    name: "Karan Singh",
+    role: "DevOps Engineer",
+    experience: 5,
+    salary: 305000,
+    department_id: 6,
+    joining_date: "2021-07-22",
+    departments: { id: 6, name: "Infrastructure" }
+  },
+  {
+    id: 108,
+    name: "Neha Gupta",
+    role: "Financial Analyst",
+    experience: 4,
+    salary: 255000,
+    department_id: 7,
+    joining_date: "2022-08-10",
+    departments: { id: 7, name: "Finance" }
+  },
+  {
+    id: 109,
+    name: "Aditya Joshi",
+    role: "Frontend Developer",
+    experience: 3,
+    salary: 240000,
+    department_id: 1,
+    joining_date: "2024-01-08",
+    departments: { id: 1, name: "Engineering" }
+  },
+  {
+    id: 110,
+    name: "Meera Nair",
+    role: "QA Engineer",
+    experience: 3,
+    salary: 250000,
+    department_id: 8,
+    joining_date: "2023-02-14",
+    departments: { id: 8, name: "Quality Assurance" }
+  },
+  {
+    id: 111,
+    name: "Siddharth Rao",
+    role: "Marketing Specialist",
+    experience: 4,
+    salary: 265000,
+    department_id: 9,
+    joining_date: "2022-03-11",
+    departments: { id: 9, name: "Marketing" }
+  },
+  {
+    id: 112,
+    name: "Pooja Das",
+    role: "Accountant",
+    experience: 5,
+    salary: 270000,
+    department_id: 7,
+    joining_date: "2021-04-19",
+    departments: { id: 7, name: "Finance" }
+  },
+  {
+    id: 113,
+    name: "Rahul Deshmukh",
+    role: "Sales Executive",
+    experience: 3,
+    salary: 235000,
+    department_id: 10,
+    joining_date: "2023-05-07",
+    departments: { id: 10, name: "Sales" }
+  },
+  {
+    id: 114,
+    name: "Divya Kapoor",
+    role: "HR Manager",
+    experience: 8,
+    salary: 320000,
+    department_id: 2,
+    joining_date: "2018-06-21",
+    departments: { id: 2, name: "Human Resources" }
+  },
+  {
+    id: 115,
+    name: "Arjun Mehta",
+    role: "Cloud Architect",
+    experience: 9,
+    salary: 400000,
+    department_id: 6,
+    joining_date: "2018-07-13",
+    departments: { id: 6, name: "Infrastructure" }
+  },
+  {
+    id: 116,
+    name: "Kavita Pillai",
+    role: "Content Strategist",
+    experience: 3,
+    salary: 240000,
+    department_id: 9,
+    joining_date: "2023-08-09",
+    departments: { id: 9, name: "Marketing" }
+  },
+  {
+    id: 117,
+    name: "Manish Tiwari",
+    role: "Customer Support Lead",
+    experience: 5,
+    salary: 250000,
+    department_id: 11,
+    joining_date: "2021-09-17",
+    departments: { id: 11, name: "Support" }
+  },
+  {
+    id: 118,
+    name: "Tanvi Saxena",
+    role: "Security Engineer",
+    experience: 4,
+    salary: 300000,
+    department_id: 12,
+    joining_date: "2022-10-25",
+    departments: { id: 12, name: "Security" }
+  },
+  {
+    id: 119,
+    name: "Varun Nambiar",
+    role: "Business Analyst",
+    experience: 3,
+    salary: 275000,
+    department_id: 4,
+    joining_date: "2023-11-06",
+    departments: { id: 4, name: "Product" }
+  },
+  {
+    id: 120,
+    name: "Ishaan Kulkarni",
+    role: "Mobile App Developer",
+    experience: 4,
+    salary: 285000,
+    department_id: 1,
+    joining_date: "2022-12-12",
+    departments: { id: 1, name: "Engineering" }
+  }
+];
+
