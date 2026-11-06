@@ -2,6 +2,7 @@ from fastapi.responses import JSONResponse
 import logging
 from fastapi import Request, status
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 # pyrefly: ignore [missing-import]
 from routers.employees import router as employee_router
 from routers.departments import router as department_router
@@ -10,6 +11,19 @@ from sqlalchemy.exc import OperationalError
 
 app = FastAPI(
     title="Welcome to Fast api learning docs!"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 logger = logging.getLogger(__name__)
