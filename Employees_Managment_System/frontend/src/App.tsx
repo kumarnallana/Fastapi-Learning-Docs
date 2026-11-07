@@ -8,6 +8,7 @@ import {
   Layers,
   Plus,
   RefreshCw,
+  Search,
   Server,
   Sparkles,
   Users,
@@ -15,6 +16,7 @@ import {
 import { AddDepartmentModal } from './components/AddDepartmentModal';
 import { AddEmployeeModal } from './components/AddEmployeeModal';
 import { AnalyticsDashboard } from './components/AnalyticsDashboard';
+import { CommandPalette } from './components/CommandPalette';
 import { DeleteConfirmModal } from './components/DeleteConfirmModal';
 import { DepartmentManager } from './components/DepartmentManager';
 import { EditEmployeeModal } from './components/EditEmployeeModal';
@@ -37,6 +39,7 @@ export default function App() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAddDeptModalOpen, setIsAddDeptModalOpen] = useState(false);
   const [isDiagnosticsOpen, setIsDiagnosticsOpen] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [selectedDirectoryDeptId, setSelectedDirectoryDeptId] = useState<string | undefined>(undefined);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [deletingEmployee, setDeletingEmployee] = useState<Employee | null>(null);
@@ -93,6 +96,18 @@ export default function App() {
 
   useEffect(() => {
     fetchData();
+  }, []);
+
+  // Global Ctrl+K / Cmd+K listener for Command Palette
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
 
   // Compute key statistics for overview
@@ -166,6 +181,19 @@ export default function App() {
 
           {/* Status Indicator & Live Actions */}
           <div className="flex items-center gap-3">
+            {/* Quick Command Palette Button */}
+            <button
+              onClick={() => setIsCommandPaletteOpen(true)}
+              className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors text-xs font-medium cursor-pointer"
+              title="Search employees, departments, and actions (Ctrl+K)"
+            >
+              <Search className="w-3.5 h-3.5 text-slate-400" />
+              <span>Search</span>
+              <kbd className="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] text-slate-400 font-mono border border-slate-700/60">
+                Ctrl K
+              </kbd>
+            </button>
+
             <button
               onClick={() => setIsDiagnosticsOpen(true)}
               title="Inspect System Architecture & Live Diagnostics"
@@ -443,6 +471,20 @@ export default function App() {
         totalEmployees={employees.length}
         totalDepartments={departments.length}
         onRefreshData={fetchData}
+      />
+
+      {/* Global Command Palette */}
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        employees={employees}
+        departments={departments}
+        onSelectEmployee={(emp) => setSelectedEmployeeProfile(emp)}
+        onSelectDepartment={(deptId) => handleFilterByDepartment(deptId)}
+        onNavigateTab={(tab) => setActiveTab(tab)}
+        onOpenAddEmployee={() => setIsAddModalOpen(true)}
+        onOpenAddDepartment={() => setIsAddDeptModalOpen(true)}
+        onOpenDiagnostics={() => setIsDiagnosticsOpen(true)}
       />
 
       {/* Footer */}
