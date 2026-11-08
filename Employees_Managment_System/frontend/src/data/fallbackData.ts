@@ -1,4 +1,4 @@
-import type { Department, Employee } from '../types';
+import type { Department, Employee } from "../types";
 
 export const FALLBACK_DEPARTMENTS: Department[] = [
   { id: 1, name: "Engineering" },
@@ -12,7 +12,7 @@ export const FALLBACK_DEPARTMENTS: Department[] = [
   { id: 9, name: "Marketing" },
   { id: 10, name: "Sales" },
   { id: 11, name: "Support" },
-  { id: 12, name: "Security" }
+  { id: 12, name: "Security" },
 ];
 
 export const FALLBACK_EMPLOYEES: Employee[] = [
@@ -24,7 +24,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 275000,
     department_id: 1,
     joining_date: "2023-01-10",
-    departments: { id: 1, name: "Engineering" }
+    departments: { id: 1, name: "Engineering" },
   },
   {
     id: 102,
@@ -34,7 +34,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 260000,
     department_id: 2,
     joining_date: "2022-02-15",
-    departments: { id: 2, name: "Human Resources" }
+    departments: { id: 2, name: "Human Resources" },
   },
   {
     id: 103,
@@ -44,7 +44,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 310000,
     department_id: 1,
     joining_date: "2020-03-20",
-    departments: { id: 1, name: "Engineering" }
+    departments: { id: 1, name: "Engineering" },
   },
   {
     id: 104,
@@ -54,7 +54,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 245000,
     department_id: 3,
     joining_date: "2023-04-05",
-    departments: { id: 3, name: "Design" }
+    departments: { id: 3, name: "Design" },
   },
   {
     id: 105,
@@ -64,7 +64,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 350000,
     department_id: 4,
     joining_date: "2019-05-12",
-    departments: { id: 4, name: "Product" }
+    departments: { id: 4, name: "Product" },
   },
   {
     id: 106,
@@ -74,7 +74,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 290000,
     department_id: 5,
     joining_date: "2022-06-18",
-    departments: { id: 5, name: "Data Science" }
+    departments: { id: 5, name: "Data Science" },
   },
   {
     id: 107,
@@ -84,7 +84,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 305000,
     department_id: 6,
     joining_date: "2021-07-22",
-    departments: { id: 6, name: "Infrastructure" }
+    departments: { id: 6, name: "Infrastructure" },
   },
   {
     id: 108,
@@ -94,7 +94,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 255000,
     department_id: 7,
     joining_date: "2022-08-10",
-    departments: { id: 7, name: "Finance" }
+    departments: { id: 7, name: "Finance" },
   },
   {
     id: 109,
@@ -104,7 +104,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 240000,
     department_id: 1,
     joining_date: "2024-01-08",
-    departments: { id: 1, name: "Engineering" }
+    departments: { id: 1, name: "Engineering" },
   },
   {
     id: 110,
@@ -114,7 +114,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 250000,
     department_id: 8,
     joining_date: "2023-02-14",
-    departments: { id: 8, name: "Quality Assurance" }
+    departments: { id: 8, name: "Quality Assurance" },
   },
   {
     id: 111,
@@ -124,7 +124,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 265000,
     department_id: 9,
     joining_date: "2022-03-11",
-    departments: { id: 9, name: "Marketing" }
+    departments: { id: 9, name: "Marketing" },
   },
   {
     id: 112,
@@ -134,7 +134,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 270000,
     department_id: 7,
     joining_date: "2021-04-19",
-    departments: { id: 7, name: "Finance" }
+    departments: { id: 7, name: "Finance" },
   },
   {
     id: 113,
@@ -144,7 +144,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 235000,
     department_id: 10,
     joining_date: "2023-05-07",
-    departments: { id: 10, name: "Sales" }
+    departments: { id: 10, name: "Sales" },
   },
   {
     id: 114,
@@ -154,7 +154,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 320000,
     department_id: 2,
     joining_date: "2018-06-21",
-    departments: { id: 2, name: "Human Resources" }
+    departments: { id: 2, name: "Human Resources" },
   },
   {
     id: 115,
@@ -164,7 +164,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 400000,
     department_id: 6,
     joining_date: "2018-07-13",
-    departments: { id: 6, name: "Infrastructure" }
+    departments: { id: 6, name: "Infrastructure" },
   },
   {
     id: 116,
@@ -174,7 +174,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 240000,
     department_id: 9,
     joining_date: "2023-08-09",
-    departments: { id: 9, name: "Marketing" }
+    departments: { id: 9, name: "Marketing" },
   },
   {
     id: 117,
@@ -184,7 +184,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 250000,
     department_id: 11,
     joining_date: "2021-09-17",
-    departments: { id: 11, name: "Support" }
+    departments: { id: 11, name: "Support" },
   },
   {
     id: 118,
@@ -194,7 +194,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 300000,
     department_id: 12,
     joining_date: "2022-10-25",
-    departments: { id: 12, name: "Security" }
+    departments: { id: 12, name: "Security" },
   },
   {
     id: 119,
@@ -204,7 +204,7 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 275000,
     department_id: 4,
     joining_date: "2023-11-06",
-    departments: { id: 4, name: "Product" }
+    departments: { id: 4, name: "Product" },
   },
   {
     id: 120,
@@ -214,7 +214,6 @@ export const FALLBACK_EMPLOYEES: Employee[] = [
     salary: 285000,
     department_id: 1,
     joining_date: "2022-12-12",
-    departments: { id: 1, name: "Engineering" }
-  }
+    departments: { id: 1, name: "Engineering" },
+  },
 ];
-
