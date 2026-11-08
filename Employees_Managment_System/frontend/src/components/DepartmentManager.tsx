@@ -1,4 +1,3 @@
-import React, { useMemo, useState } from 'react';
 import {
   ArrowRight,
   BarChart3,
@@ -11,8 +10,9 @@ import {
   TrendingUp,
   Users,
   X,
-} from 'lucide-react';
-import type { Department, Employee } from '../types';
+} from "lucide-react";
+import React, { useMemo, useState } from "react";
+import type { Department, Employee } from "../types";
 
 interface DepartmentManagerProps {
   departments: Department[];
@@ -27,39 +27,62 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
   onOpenAddDeptModal,
   onFilterByDepartment,
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'headcount' | 'payroll' | 'avgSalary' | 'name'>('headcount');
-  const [filterTier, setFilterTier] = useState<'all' | 'high_budget' | 'large_teams'>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<
+    "headcount" | "payroll" | "avgSalary" | "name"
+  >("headcount");
+  const [filterTier, setFilterTier] = useState<
+    "all" | "high_budget" | "large_teams"
+  >("all");
 
   const totalEmployees = employees.length;
-  const totalPayroll = employees.reduce((acc, curr) => acc + Number(curr.salary || 0), 0);
+  const totalPayroll = employees.reduce(
+    (acc, curr) => acc + Number(curr.salary || 0),
+    0,
+  );
 
   // Overall organization company min/max salary for scaling visualization tracks
-  const allSalaries = employees.map((e) => Number(e.salary || 0)).filter((s) => s > 0);
-  const companyMinSalary = allSalaries.length ? Math.min(...allSalaries) : 50000;
-  const companyMaxSalary = allSalaries.length ? Math.max(...allSalaries) : 500000;
+  const allSalaries = employees
+    .map((e) => Number(e.salary || 0))
+    .filter((s) => s > 0);
+  const companyMinSalary = allSalaries.length
+    ? Math.min(...allSalaries)
+    : 50000;
+  const companyMaxSalary = allSalaries.length
+    ? Math.max(...allSalaries)
+    : 500000;
   const salarySpan = Math.max(companyMaxSalary - companyMinSalary, 1);
 
   // Compute enriched metrics for each department
   const enrichedDepartments = useMemo(() => {
     return departments.map((dept) => {
       const deptMembers = employees.filter((e) => e.department_id === dept.id);
-      const deptPayroll = deptMembers.reduce((acc, curr) => acc + Number(curr.salary || 0), 0);
-      const avgSalary = deptMembers.length ? Math.round(deptPayroll / deptMembers.length) : 0;
+      const deptPayroll = deptMembers.reduce(
+        (acc, curr) => acc + Number(curr.salary || 0),
+        0,
+      );
+      const avgSalary = deptMembers.length
+        ? Math.round(deptPayroll / deptMembers.length)
+        : 0;
       const sharePercentage = totalEmployees
         ? ((deptMembers.length / totalEmployees) * 100).toFixed(1)
-        : '0';
+        : "0";
       const payrollPercentage = totalPayroll
         ? ((deptPayroll / totalPayroll) * 100).toFixed(1)
-        : '0';
+        : "0";
 
-      const deptSalaries = deptMembers.map((m) => Number(m.salary || 0)).filter((s) => s > 0);
+      const deptSalaries = deptMembers
+        .map((m) => Number(m.salary || 0))
+        .filter((s) => s > 0);
       const minSalary = deptSalaries.length ? Math.min(...deptSalaries) : 0;
       const maxSalary = deptSalaries.length ? Math.max(...deptSalaries) : 0;
 
       const avgExp = deptMembers.length
-        ? (deptMembers.reduce((acc, m) => acc + (m.experience || 0), 0) / deptMembers.length).toFixed(1)
-        : '0';
+        ? (
+            deptMembers.reduce((acc, m) => acc + (m.experience || 0), 0) /
+            deptMembers.length
+          ).toFixed(1)
+        : "0";
 
       return {
         ...dept,
@@ -78,23 +101,25 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
   // Filter & Sort
   const filteredDepartments = useMemo(() => {
     let result = enrichedDepartments.filter((dept) => {
-      const matchesSearch = dept.name.toLowerCase().includes(searchQuery.toLowerCase().trim());
+      const matchesSearch = dept.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase().trim());
       if (!matchesSearch) return false;
 
-      if (filterTier === 'high_budget') {
+      if (filterTier === "high_budget") {
         return dept.payroll >= 500000;
       }
-      if (filterTier === 'large_teams') {
+      if (filterTier === "large_teams") {
         return dept.members.length >= 3;
       }
       return true;
     });
 
     result.sort((a, b) => {
-      if (sortBy === 'headcount') return b.members.length - a.members.length;
-      if (sortBy === 'payroll') return b.payroll - a.payroll;
-      if (sortBy === 'avgSalary') return b.avgSalary - a.avgSalary;
-      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      if (sortBy === "headcount") return b.members.length - a.members.length;
+      if (sortBy === "payroll") return b.payroll - a.payroll;
+      if (sortBy === "avgSalary") return b.avgSalary - a.avgSalary;
+      if (sortBy === "name") return a.name.localeCompare(b.name);
       return 0;
     });
 
@@ -114,7 +139,8 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
             Departments &amp; Budget Distribution
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            Real-time departmental headcount, payroll allocation, and salary dispersion
+            Real-time departmental headcount, payroll allocation, and salary
+            dispersion
           </p>
         </div>
 
@@ -134,8 +160,12 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
             <span>TOTAL DIVISIONS</span>
             <Building2 className="w-4 h-4 text-indigo-400" />
           </div>
-          <div className="mt-2 text-2xl font-bold text-white">{departments.length} Units</div>
-          <p className="text-[11px] text-slate-500 mt-0.5">Active organizational departments</p>
+          <div className="mt-2 text-2xl font-bold text-white">
+            {departments.length} Units
+          </div>
+          <p className="text-[11px] text-slate-500 mt-0.5">
+            Active organizational departments
+          </p>
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
@@ -146,7 +176,9 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
           <div className="mt-2 text-2xl font-bold text-white font-mono">
             ${(totalPayroll / 1000000).toFixed(2)}M
           </div>
-          <p className="text-[11px] text-slate-500 mt-0.5">Cumulative company compensation</p>
+          <p className="text-[11px] text-slate-500 mt-0.5">
+            Cumulative company compensation
+          </p>
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
@@ -154,8 +186,12 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
             <span>HEADCOUNT COVERAGE</span>
             <Users className="w-4 h-4 text-violet-400" />
           </div>
-          <div className="mt-2 text-2xl font-bold text-white">{totalEmployees} Members</div>
-          <p className="text-[11px] text-slate-500 mt-0.5">100% assigned to departments</p>
+          <div className="mt-2 text-2xl font-bold text-white">
+            {totalEmployees} Members
+          </div>
+          <p className="text-[11px] text-slate-500 mt-0.5">
+            100% assigned to departments
+          </p>
         </div>
       </div>
 
@@ -173,7 +209,7 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
           />
           {searchQuery && (
             <button
-              onClick={() => setSearchQuery('')}
+              onClick={() => setSearchQuery("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
             >
               <X className="w-3.5 h-3.5" />
@@ -188,31 +224,31 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
             <span>Filter:</span>
           </span>
           <button
-            onClick={() => setFilterTier('all')}
+            onClick={() => setFilterTier("all")}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              filterTier === 'all'
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'bg-slate-950/60 hover:bg-slate-800 text-slate-400 border border-slate-800'
+              filterTier === "all"
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "bg-slate-950/60 hover:bg-slate-800 text-slate-400 border border-slate-800"
             }`}
           >
             All ({departments.length})
           </button>
           <button
-            onClick={() => setFilterTier('high_budget')}
+            onClick={() => setFilterTier("high_budget")}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              filterTier === 'high_budget'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-slate-950/60 hover:bg-slate-800 text-slate-400 border border-slate-800'
+              filterTier === "high_budget"
+                ? "bg-emerald-600 text-white shadow-sm"
+                : "bg-slate-950/60 hover:bg-slate-800 text-slate-400 border border-slate-800"
             }`}
           >
             $500k+ Budget
           </button>
           <button
-            onClick={() => setFilterTier('large_teams')}
+            onClick={() => setFilterTier("large_teams")}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              filterTier === 'large_teams'
-                ? 'bg-violet-600 text-white shadow-sm'
-                : 'bg-slate-950/60 hover:bg-slate-800 text-slate-400 border border-slate-800'
+              filterTier === "large_teams"
+                ? "bg-violet-600 text-white shadow-sm"
+                : "bg-slate-950/60 hover:bg-slate-800 text-slate-400 border border-slate-800"
             }`}
           >
             Large Teams (3+)
@@ -225,7 +261,13 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
           <select
             value={sortBy}
             onChange={(e) =>
-              setSortBy(e.target.value as 'headcount' | 'payroll' | 'avgSalary' | 'name')
+              setSortBy(
+                e.target.value as
+                  | "headcount"
+                  | "payroll"
+                  | "avgSalary"
+                  | "name",
+              )
             }
             className="px-3 py-2 rounded-xl text-xs font-medium bg-slate-950/80 border border-slate-800 text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
           >
@@ -244,15 +286,17 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
             <Building2 className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">No departments match your filter</h3>
+            <h3 className="text-base font-bold text-white">
+              No departments match your filter
+            </h3>
             <p className="text-xs text-slate-400 mt-1">
               Try adjusting your search query or reset the active filter tier.
             </p>
           </div>
           <button
             onClick={() => {
-              setSearchQuery('');
-              setFilterTier('all');
+              setSearchQuery("");
+              setFilterTier("all");
             }}
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-all cursor-pointer"
           >
@@ -265,15 +309,30 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
             // Calculate track positions for salary dispersion
             const minPercent = Math.max(
               0,
-              Math.min(100, Math.round(((dept.minSalary - companyMinSalary) / salarySpan) * 100))
+              Math.min(
+                100,
+                Math.round(
+                  ((dept.minSalary - companyMinSalary) / salarySpan) * 100,
+                ),
+              ),
             );
             const maxPercent = Math.max(
               minPercent + 5,
-              Math.min(100, Math.round(((dept.maxSalary - companyMinSalary) / salarySpan) * 100))
+              Math.min(
+                100,
+                Math.round(
+                  ((dept.maxSalary - companyMinSalary) / salarySpan) * 100,
+                ),
+              ),
             );
             const avgPercent = Math.max(
               0,
-              Math.min(100, Math.round(((dept.avgSalary - companyMinSalary) / salarySpan) * 100))
+              Math.min(
+                100,
+                Math.round(
+                  ((dept.avgSalary - companyMinSalary) / salarySpan) * 100,
+                ),
+              ),
             );
 
             return (
@@ -302,22 +361,28 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
                     {dept.name}
                   </h3>
                   <p className="text-xs text-slate-400 mt-1">
-                    {dept.members.length} {dept.members.length === 1 ? 'member' : 'members'} •{' '}
-                    {dept.sharePercentage}% headcount • {dept.avgExp} yrs avg exp
+                    {dept.members.length}{" "}
+                    {dept.members.length === 1 ? "member" : "members"} •{" "}
+                    {dept.sharePercentage}% headcount • {dept.avgExp} yrs avg
+                    exp
                   </p>
 
                   {/* Progress bar representing workforce share */}
                   <div className="w-full h-1.5 rounded-full bg-slate-800 mt-3 overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full"
-                      style={{ width: `${Math.max(Number(dept.sharePercentage), 4)}%` }}
+                      style={{
+                        width: `${Math.max(Number(dept.sharePercentage), 4)}%`,
+                      }}
                     />
                   </div>
 
                   {/* Metric Summary */}
                   <div className="mt-4 pt-4 border-t border-slate-800/80 grid grid-cols-2 gap-3 text-xs">
                     <div>
-                      <span className="text-slate-500 block">Total Payroll</span>
+                      <span className="text-slate-500 block">
+                        Total Payroll
+                      </span>
                       <span className="font-mono font-semibold text-emerald-400">
                         ${dept.payroll.toLocaleString()}
                       </span>
@@ -339,7 +404,8 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
                           <span>Salary Range</span>
                         </span>
                         <span className="font-mono text-slate-300 font-semibold text-[10px]">
-                          ${(dept.minSalary / 1000).toFixed(0)}k – ${(dept.maxSalary / 1000).toFixed(0)}k
+                          ${(dept.minSalary / 1000).toFixed(0)}k – $
+                          {(dept.maxSalary / 1000).toFixed(0)}k
                         </span>
                       </div>
 
@@ -361,8 +427,12 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
                         />
                       </div>
                       <div className="flex justify-between text-[9px] text-slate-500 font-mono">
-                        <span>${(companyMinSalary / 1000).toFixed(0)}k (Min)</span>
-                        <span>${(companyMaxSalary / 1000).toFixed(0)}k (Max)</span>
+                        <span>
+                          ${(companyMinSalary / 1000).toFixed(0)}k (Min)
+                        </span>
+                        <span>
+                          ${(companyMaxSalary / 1000).toFixed(0)}k (Max)
+                        </span>
                       </div>
                     </div>
                   )}
@@ -379,9 +449,9 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
                               className="inline-block w-7 h-7 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-500 text-white font-bold text-[10px] flex items-center justify-center ring-2 ring-slate-900"
                             >
                               {m.name
-                                .split(' ')
+                                .split(" ")
                                 .map((n) => n[0])
-                                .join('')
+                                .join("")
                                 .slice(0, 2)}
                             </div>
                           ))}
@@ -393,7 +463,9 @@ export const DepartmentManager: React.FC<DepartmentManagerProps> = ({
                         )}
                       </div>
                     ) : (
-                      <p className="text-[11px] text-slate-500 italic">No team members assigned yet</p>
+                      <p className="text-[11px] text-slate-500 italic">
+                        No team members assigned yet
+                      </p>
                     )}
                   </div>
                 </div>
