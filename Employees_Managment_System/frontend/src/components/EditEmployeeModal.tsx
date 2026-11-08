@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import {
   AlertCircle,
   Briefcase,
@@ -10,9 +9,10 @@ import {
   RefreshCw,
   User,
   X,
-} from 'lucide-react';
-import { api } from '../services/api';
-import type { Department, Employee, EmployeeUpdateInput } from '../types';
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { api } from "../services/api";
+import type { Department, Employee, EmployeeUpdateInput } from "../types";
 
 interface EditEmployeeModalProps {
   isOpen: boolean;
@@ -30,12 +30,12 @@ export const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
   onEmployeeUpdated,
 }) => {
   const [formData, setFormData] = useState<EmployeeUpdateInput>({
-    name: '',
-    role: '',
+    name: "",
+    role: "",
     department_id: 1,
     experience: 0,
     salary: 0,
-    joining_date: '',
+    joining_date: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -63,23 +63,23 @@ export const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
     const errs: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      errs.name = 'Full name is required';
+      errs.name = "Full name is required";
     }
 
     if (!formData.role.trim()) {
-      errs.role = 'Role is required';
+      errs.role = "Role is required";
     }
 
     if (formData.experience < 0 || isNaN(formData.experience)) {
-      errs.experience = 'Experience cannot be negative';
+      errs.experience = "Experience cannot be negative";
     }
 
     if (formData.salary <= 0 || isNaN(formData.salary)) {
-      errs.salary = 'Please enter a valid positive salary';
+      errs.salary = "Please enter a valid positive salary";
     }
 
     if (!formData.joining_date) {
-      errs.joining_date = 'Joining date is required';
+      errs.joining_date = "Joining date is required";
     }
 
     setErrors(errs);
@@ -104,7 +104,7 @@ export const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
       onEmployeeUpdated(updated);
       onClose();
     } catch (err: any) {
-      setApiError(err?.message || 'Failed to update employee details.');
+      setApiError(err?.message || "Failed to update employee details.");
     } finally {
       setIsSubmitting(false);
     }
@@ -121,12 +121,16 @@ export const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-white tracking-tight">Edit Profile</h2>
+                <h2 className="text-lg font-bold text-white tracking-tight">
+                  Edit Profile
+                </h2>
                 <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
                   #{employee.id}
                 </span>
               </div>
-              <p className="text-xs text-slate-400">Update employee records and role assignments</p>
+              <p className="text-xs text-slate-400">
+                Update employee records and role assignments
+              </p>
             </div>
           </div>
           <button
@@ -156,13 +160,17 @@ export const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 className={`w-full bg-slate-950/80 border ${
-                  errors.name ? 'border-rose-500/80' : 'border-slate-800'
+                  errors.name ? "border-rose-500/80" : "border-slate-800"
                 } rounded-xl pl-10 pr-4 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50`}
               />
             </div>
-            {errors.name && <p className="mt-1 text-xs text-rose-400">{errors.name}</p>}
+            {errors.name && (
+              <p className="mt-1 text-xs text-rose-400">{errors.name}</p>
+            )}
           </div>
 
           {/* Role and Department Grid */}
@@ -176,13 +184,17 @@ export const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
                 <input
                   type="text"
                   value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, role: e.target.value })
+                  }
                   className={`w-full bg-slate-950/80 border ${
-                    errors.role ? 'border-rose-500/80' : 'border-slate-800'
+                    errors.role ? "border-rose-500/80" : "border-slate-800"
                   } rounded-xl pl-10 pr-4 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50`}
                 />
               </div>
-              {errors.role && <p className="mt-1 text-xs text-rose-400">{errors.role}</p>}
+              {errors.role && (
+                <p className="mt-1 text-xs text-rose-400">{errors.role}</p>
+              )}
             </div>
 
             <div>
@@ -193,7 +205,12 @@ export const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
                 <Building2 className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <select
                   value={formData.department_id}
-                  onChange={(e) => setFormData({ ...formData, department_id: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      department_id: Number(e.target.value),
+                    })
+                  }
                   className="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-10 pr-8 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 appearance-none cursor-pointer"
                 >
                   {departments.map((d) => (
@@ -216,10 +233,19 @@ export const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
                 type="number"
                 min="0"
                 value={formData.experience}
-                onChange={(e) => setFormData({ ...formData, experience: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    experience: Number(e.target.value),
+                  })
+                }
                 className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
               />
-              {errors.experience && <p className="mt-1 text-xs text-rose-400">{errors.experience}</p>}
+              {errors.experience && (
+                <p className="mt-1 text-xs text-rose-400">
+                  {errors.experience}
+                </p>
+              )}
             </div>
 
             <div>
@@ -233,11 +259,15 @@ export const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
                   min="0"
                   step="5000"
                   value={formData.salary}
-                  onChange={(e) => setFormData({ ...formData, salary: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, salary: Number(e.target.value) })
+                  }
                   className="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 font-mono"
                 />
               </div>
-              {errors.salary && <p className="mt-1 text-xs text-rose-400">{errors.salary}</p>}
+              {errors.salary && (
+                <p className="mt-1 text-xs text-rose-400">{errors.salary}</p>
+              )}
             </div>
           </div>
 
@@ -251,12 +281,16 @@ export const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
               <input
                 type="date"
                 value={formData.joining_date}
-                onChange={(e) => setFormData({ ...formData, joining_date: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, joining_date: e.target.value })
+                }
                 className="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
               />
             </div>
             {errors.joining_date && (
-              <p className="mt-1 text-xs text-rose-400">{errors.joining_date}</p>
+              <p className="mt-1 text-xs text-rose-400">
+                {errors.joining_date}
+              </p>
             )}
           </div>
 
@@ -293,4 +327,3 @@ export const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
     </div>
   );
 };
-
